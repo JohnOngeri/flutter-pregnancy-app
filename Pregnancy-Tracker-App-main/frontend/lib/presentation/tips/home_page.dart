@@ -6,7 +6,6 @@ import 'package:frontend/infrastructure/tip/tip_repository.dart';
 import 'package:go_router/go_router.dart';
 import 'components/detail_page.dart';
 import 'package:frontend/presentation/core/constants/assets.dart';
-
 import 'components/tips_card.dart';
 import 'components/tips_model.dart';
 
@@ -23,25 +22,30 @@ class _TipsHomePageState extends State<TipsHomePage> {
       imgPath: Assets.assetsImagesPlateOfHealthyFood,
       text: 'FOOD TIPS',
       id: '1',
-      type: 'food',
+      type: 'Food Tips', // Changed type to match detail_page
+      author: 'Dr. Johnny',
     ),
     TipsModel(
       imgPath: Assets.assetsImagesHeartAndStethoscope,
       text: 'HEALTH TIPS',
       id: '2',
-      type: 'health',
+      type: 'Health Tips', // Changed type to match detail_page
+      author: 'Dr. Loic',
     ),
     TipsModel(
       imgPath: Assets.assetsImagesHappySmileyWithFlowers,
       text: 'PSYCHOLOGICAL TIPS',
       id: '3',
-      type: 'psychology',
+      type: 'Psychological Tips', // Changed type to match detail_page
+      author: 'Dr. Favor',
     ),
     TipsModel(
-        imgPath: Assets.assetsImagesWoman,
-        text: 'FITNESS TIPS',
-        id: '4',
-        type: 'fitness'),
+      imgPath: Assets.assetsImagesWoman,
+      text: 'FITNESS TIPS',
+      id: '4',
+      type: 'Fitness Tips', // Changed type to match detail_page
+      author: 'Dr. Ivan',
+    ),
   ];
 
   @override
@@ -49,15 +53,12 @@ class _TipsHomePageState extends State<TipsHomePage> {
     TipAPI tipApi = TipAPI();
     TipRepository tipRepository = TipRepository(tipApi);
     TipBloc tipBloc = TipBloc(tipRepositoryInterface: tipRepository);
-
     Size size = MediaQuery.of(context).size;
     return BlocProvider(
       create: (context) => tipBloc,
-      
       child: SafeArea(
         child: Column(
           children: [
-            // app bar
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Align(
@@ -75,26 +76,28 @@ class _TipsHomePageState extends State<TipsHomePage> {
                 ),
               ),
             ),
-
             Expanded(
-                child: ListView.builder(
-              itemCount: tipList.length,
-              itemBuilder: (context, index) => TipcCard(
-                size: size,
-                imgPath: tipList[index].imgPath,
-                text: tipList[index].text,
-                onPressed: () {
-                  Navigator.push(
+              child: ListView.builder(
+                itemCount: tipList.length,
+                itemBuilder: (context, index) => TipcCard(
+                  size: size,
+                  imgPath: tipList[index].imgPath,
+                  text: tipList[index].text,
+                  onPressed: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailPage(
-                                tipsModel: tipList[index],
-                                type: tipList[index].type,
-                              )));
-                },
-                id: tipList[index].id,
+                        builder: (context) => DetailPage(
+                          tipsModel: tipList[index],
+                          type: tipList[index].type,
+                        ),
+                      ),
+                    );
+                  },
+                  id: tipList[index].id,
+                ),
               ),
-            ))
+            )
           ],
         ),
       ),
