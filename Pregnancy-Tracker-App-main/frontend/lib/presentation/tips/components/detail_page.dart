@@ -8,7 +8,6 @@ import '../../core/constants/assets.dart';
 import 'tips_model.dart';
 import 'detail_body.dart';
 
-
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key, required this.tipsModel, required this.type});
   final TipsModel tipsModel;
@@ -19,7 +18,6 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-
   @override
   void initState() {
     super.initState();
@@ -29,57 +27,57 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: detailAppBar(size, context),
+      appBar: detailAppBar(size, context, widget.type),
       body: DetailBody(
         tipsModel: widget.tipsModel,
-        type: widget.type,
       ),
     );
   }
 
-  PreferredSize detailAppBar(Size size, BuildContext context) {
+  PreferredSize detailAppBar(Size size, BuildContext context, String type) {
+    String imagePath;
+    switch (type) {
+      case 'Food Tips':
+        imagePath = 'assets/images/avocadoes.png';
+        break;
+      case 'Health Tips':
+        imagePath = 'assets/images/health.png';
+        break;
+      case 'Psychological Tips':
+        imagePath = 'assets/images/mental.png';
+        break;
+      case 'Fitness Tips':
+        imagePath = 'assets/images/fitness.png';
+        break;
+      default:
+        imagePath = 'assets/images/mental.png';
+    }
+
     return PreferredSize(
-        preferredSize: Size(size.width, 50),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context),
+      preferredSize: Size(size.width, 150), // Adjust the height as needed
+      child: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
+            ),
           ),
-        ));
+        ),
+        backgroundColor: Colors.transparent, // Make the app bar transparent
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios,
+              color: Color.fromARGB(255, 255, 255, 255)),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, color: Colors.white),
+            onPressed: () {},
+          ),
+        ],
+      ),
+    );
   }
 }
-
-  PreferredSize detailAppBar(Size size, BuildContext context) {
-    return PreferredSize(
-        preferredSize: Size(size.width, 50),
-        child: SafeArea(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 27),
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            InkWell(
-              borderRadius: BorderRadius.circular(30),
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Image.asset(
-                Assets.assetsImagesArrow,
-                width: 36,
-                height: 36,
-              ),
-            ),
-            InkWell(
-              borderRadius: BorderRadius.circular(30),
-              onTap: () {},
-              child: Image.asset(
-                Assets.assetsImagesSearch,
-                width: 36,
-                height: 36,
-              ),
-            )
-          ]),
-        )));
-  }
-
