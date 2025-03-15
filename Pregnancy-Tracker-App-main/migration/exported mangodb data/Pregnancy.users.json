@@ -1,0 +1,26 @@
+[{
+  "_id": {
+    "$oid": "67aa26a263c7003b70221a06"
+  },
+  "userName": "John Ongeri",
+  "password": "$2b$11$sk0mQ280/gdCn/2qrJbkPedo9QJSLlnvfb3b9tZgHjmKJkfJQvCSi",
+  "email": "j.ouma@alustudent.com",
+  "roles": [
+    "user"
+  ],
+  "profileId": "67aa26a263c7003b70221a08",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67cde7808963a96a97f1eb25"
+  },
+  "userName": "john",
+  "password": "$2b$11$U.L7BB8jqxAuHsx9IUBHqOZ9FWe9VwJ2j8wIzsGrfAGGtZDr2kuGm",
+  "email": "johnongeriouma@gmail.com",
+  "roles": [
+    "user"
+  ],
+  "profileId": "67cde7808963a96a97f1eb27",
+  "__v": 0
+}]

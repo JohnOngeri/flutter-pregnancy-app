@@ -1,0 +1,17 @@
+[{
+  "_id": {
+    "$oid": "67ab5366e2b34cc6b95d13e7"
+  },
+  "title": "Appointment",
+  "body": "hello this is my first appointment",
+  "date": "11/2/2025",
+  "time": "16:40",
+  "author": "67aa26a263c7003b70221a08",
+  "createdAt": {
+    "$date": "2025-02-11T13:40:54.944Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-11T13:40:54.944Z"
+  },
+  "__v": 0
+}]

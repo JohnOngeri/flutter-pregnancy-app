@@ -1,0 +1,24 @@
+[{
+  "_id": {
+    "$oid": "67aa26a263c7003b70221a08"
+  },
+  "userName": "John Ongeri",
+  "followers": [],
+  "following": [],
+  "comments": [],
+  "posts": [],
+  "socialMedia": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67cde7808963a96a97f1eb27"
+  },
+  "userName": "john",
+  "followers": [],
+  "following": [],
+  "comments": [],
+  "posts": [],
+  "socialMedia": [],
+  "__v": 0
+}]
