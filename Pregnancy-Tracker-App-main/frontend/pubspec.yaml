@@ -43,7 +43,11 @@ dependencies:
   sqflite_common_ffi_web: ^0.4.5+3
   youtube_player_flutter: ^8.1.1
   
-  
+ 
+
+ 
+  firebase_core: ^3.12.1
+  firebase_auth: ^5.5.1
  
 
 

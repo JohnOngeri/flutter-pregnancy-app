@@ -40,8 +40,20 @@ import 'infrastructure/tip/tip_api.dart';
 import 'infrastructure/tip/tip_repository.dart';
 
 import 'presentation/routes/routes.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:frontend/firebase_options.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((value) {
+    print('Firebase initialized successfully');
+  }).catchError((error) {
+    print('Error initializing Firebase: $error');
+  }); // Initialize Firebase correctly
   NoteAPI noteApi = NoteAPI();
   NoteRepository noteRepository = NoteRepository(noteApi);
   NoteBloc noteBloc = NoteBloc(noteRepositoryInterface: noteRepository);
@@ -120,7 +132,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<CommentBloc>.value(value: commentBloc),
           BlocProvider<ProfileBloc>.value(value: profileBloc),
           BlocProvider<PageProviderBloc>.value(value: PageProviderBloc()),
-        ],
+        ],  
         child: Scaffold(
           body: MaterialApp.router(
             theme: LightTheme().getThemeData,

@@ -3,7 +3,7 @@ import 'package:frontend/presentation/signup/signup_page.dart';
 import '../../core/CommonWidgets/back_arrow.dart';
 import '../../core/constants/assets.dart';
 import 'login_form.dart';
-
+import 'package:frontend/presentation/forgot_password_page.dart';
 class LoginBody extends StatelessWidget {
   const LoginBody({super.key});
 
@@ -29,6 +29,13 @@ class LoginBody extends StatelessWidget {
                 children: [
                   TextButton(
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordPage(),
+                          ),
+                        );
+                        
                         // navigate to forgot passwor page
                       },
                       child: const Text("Forgot Password?")),
