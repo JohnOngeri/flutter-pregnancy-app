@@ -23,7 +23,7 @@ export class PostService {
             const reqProfile = await this.profileService.findOne(createPostDto.author);
             if (reqProfile != null) {
               var profilePosts = reqProfile.posts;
-              profilePosts.push(newPost.id.toString());
+              profilePosts.push((newPost.id ?? 'posted successfully').toString());
               const updatedProfile = await this.profileService.updateProfile(createPostDto.author, { posts: profilePosts});
             }
 
