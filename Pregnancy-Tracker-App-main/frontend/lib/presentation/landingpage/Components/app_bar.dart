@@ -30,22 +30,23 @@ class LandingAppBar extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerLeft,
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     alignment: Alignment.centerRight,
-                    child:  Column(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         GestureDetector(
                           onTap: () => GoRouter.of(context).go('/profile'),
                           child: const CircleAvatar(
                             radius: 30,
-                            backgroundImage:
-                                AssetImage(Assets.assetsImagesFancyBack),
+                            backgroundImage: AssetImage(
+                                'assets/images/woman_profile.jpg'), // Updated image path
                           ),
                         ),
-                        
                       ],
                     ),
                   )
