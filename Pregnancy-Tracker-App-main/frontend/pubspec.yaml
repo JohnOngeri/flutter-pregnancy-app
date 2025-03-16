@@ -76,6 +76,18 @@ flutter_assets:
   filename: assets.dart
     - assets/images/
     - assets/icons/
+
+
+
+  uses-material-design: true
+  fonts:
+    - family: MaterialIcons
+      fonts:
+        - asset: fonts/MaterialIcons-Regular.otf
+    - family: CupertinoIcons
+      fonts:
+        - asset: packages/cupertino_icons/assets/CupertinoIcons.ttf
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

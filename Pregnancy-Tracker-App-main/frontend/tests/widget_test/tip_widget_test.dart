@@ -50,6 +50,7 @@ void main() {
                 imgPath: 'imgPath',
                 text: 'text',
                 id: 'id',
+                 author: 'Author Name', 
                 type: 'type',
               ),
               type: 'type',
