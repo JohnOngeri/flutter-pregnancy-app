@@ -4,9 +4,16 @@ import joblib
 import numpy as np
 from fastapi.middleware.cors import CORSMiddleware
 
-# Load the trained model and scaler
-model = joblib.load("best_model.pkl")
-scaler = joblib.load("scaler.pkl")
+
+import pickle
+
+# Load the trained model and scaler using pickle
+with open("best_model.pkl", "rb") as model_file:
+    model = pickle.load(model_file)
+
+with open("scaler.pkl", "rb") as scaler_file:
+    scaler = pickle.load(scaler_file)
+
 
 # Define FastAPI app
 app = FastAPI()
