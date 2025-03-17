@@ -4,7 +4,7 @@ import 'package:frontend/application/auth/login/bloc/login_bloc.dart';
 import 'package:frontend/application/auth/signup/bloc/signup_bloc.dart';
 import 'package:frontend/infrastructure/auth/auth_api.dart';
 import 'package:frontend/local_data/shared_preferences/jj_shared_preferences_service.dart';
-
+import 'package:go_router/go_router.dart';
 import '../../infrastructure/auth/auth_repository.dart';
 import 'components/others_body.dart';
 
@@ -30,7 +30,17 @@ class OthersPage extends StatelessWidget {
             create: (context) => signupBloc,
           ),
         ],
-        child: OthersBody(),
+        child: Column(
+          children: [
+            OthersBody(),
+            ElevatedButton(
+              onPressed: () {
+                GoRouter.of(context).go('/predictions');
+              },
+              child: Text("View Predictions"),
+            ),
+          ],
+        ),
       ),
     );
   }

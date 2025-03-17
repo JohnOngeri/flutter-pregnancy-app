@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import '../notes/symptoms/notes_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../prediction_screen.dart';
 class ForgotPasswordPage extends StatefulWidget {
   @override
   _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
@@ -123,4 +124,9 @@ final router = GoRouter(routes: [
     path: '/profile',
     builder: (context, state) => const ProfilePage()
   ),
+  GoRoute(
+    path: '/predictions',
+    builder: (context, state) => PredictionScreen(),
+  ),
+ 
 ]);
