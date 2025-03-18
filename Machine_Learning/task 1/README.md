@@ -1,1 +1,43 @@
+# Machine Learning - Birth Weight Prediction  
 
+This folder contains a machine learning model for predicting birth weight based on various input factors. The model is deployed via an API that allows users to get predictions remotely.  
+
+## 📌 Features  
+✅ Birth weight prediction using trained ML models  
+✅ Public API endpoint for predictions  
+✅ SWAGGER UI for API testing  
+✅ Deployment-ready with clear setup instructions  
+✅ YouTube demo of the implementation  
+
+## 🚀 How to Use  
+
+### **1️⃣ API Endpoint**  
+The model is accessible via a publicly available API endpoint. This endpoint returns birth weight predictions based on input values.  
+
+🔗 **API Endpoint:** `[Insert Public URL Here]`  
+
+You can test the API using **Swagger UI** at:  
+🔗 **Swagger URL:** `[Insert SWAGGER URL Here]`  
+
+### **2️⃣ Running the API Locally**  
+To run the API locally:  
+1. Clone this repository  
+2. Install dependencies:  
+   ```bash
+   pip install -r requirements.txt
+Start the FastAPI server:
+bash
+Copy code
+uvicorn api_task2:app --host 0.0.0.0 --port 8000
+Open Swagger UI in your browser:
+arduino
+Copy code
+http://127.0.0.1:8000/docs
+3️⃣ Demo Video
+📺 Watch the YouTube Demo: [Insert YouTube Link Here]
+
+4️⃣ Deployment Notes
+Ensure the API is hosted on a publicly routable URL (not localhost).
+The API should handle incoming requests and return predictions reliably.
+📌 Return to Main Repository → Back to Root README
+📌 Explore the Flutter App → Pregnancy Tracker App
