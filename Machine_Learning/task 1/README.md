@@ -14,10 +14,10 @@ This folder contains a machine learning model for predicting birth weight based 
 ### **1️⃣ API Endpoint**  
 The model is accessible via a publicly available API endpoint. This endpoint returns birth weight predictions based on input values.  
 
-🔗 **API Endpoint:** `[Insert Public URL Here]`  
+🔗 **API Endpoint:**'https://flutter-pregnancy-app-4.onrender.com/predict'  
 
 You can test the API using **Swagger UI** at:  
-🔗 **Swagger URL:** `[Insert SWAGGER URL Here]`  
+🔗 **Swagger URL:**(https://flutter-pregnancy-app-4.onrender.com/docs#/default/predict_birthweight_predict_post) 
 
 ### **2️⃣ Running the API Locally**  
 To run the API locally:  
@@ -26,12 +26,10 @@ To run the API locally:
    ```bash
    pip install -r requirements.txt
 Start the FastAPI server:
-bash
-Copy code
 uvicorn api_task2:app --host 0.0.0.0 --port 8000
 Open Swagger UI in your browser:
 arduino
-Copy code
+
 http://127.0.0.1:8000/docs
 3️⃣ Demo Video
 📺 Watch the YouTube Demo: [Insert YouTube Link Here]
