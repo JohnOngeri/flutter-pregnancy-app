@@ -20,9 +20,12 @@ class PredictionService {
         }),
       );
 
+       print("Response Code: ${response.statusCode}");
+       print("Response Body: ${response.body}");
+
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        return data['prediction'].toString(); // Ensure the API returns a 'prediction' field
+        return data['predicted_birthweight']?.toString() ?? "No predicted_birthweight found!"; // Ensure the API returns a 'prediction' field
       } else {
         throw Exception("Failed to fetch prediction: ${response.statusCode} - ${response.body}");
       }
