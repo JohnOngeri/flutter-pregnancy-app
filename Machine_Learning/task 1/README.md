@@ -32,7 +32,7 @@ arduino
 
 http://127.0.0.1:8000/docs
 3️⃣ Demo Video
-📺 Watch the YouTube Demo: [Insert YouTube Link Here]
+📺 Watch the YouTube Demo:(https://youtu.be/05JrfCqH4bE?si=Y22jacv5hoY9HXqW)
 
 4️⃣ Deployment Notes
 Ensure the API is hosted on a publicly routable URL (not localhost).
