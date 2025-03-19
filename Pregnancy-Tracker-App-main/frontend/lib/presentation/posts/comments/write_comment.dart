@@ -15,12 +15,17 @@ class WriteAComment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Building WriteAComment for Post ID: $postId");
+
     final TextEditingController controller = TextEditingController();
+
     return Positioned(
       bottom: 0,
       child: BlocListener<CommentBloc, CommentState>(
         listener: (context, state) {
-          if (state is CommentStateSuccess){
+          debugPrint("CommentBloc State Changed: $state");
+          if (state is CommentStateSuccess) {
+            debugPrint("Comment successfully added. Fetching updated comments...");
             BlocProvider.of<CommentBloc>(context).add(CommentEventGetCommentsForPost(postId));
           }
         },
@@ -33,11 +38,11 @@ class WriteAComment extends StatelessWidget {
             children: [
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 8.0),
+                  padding: const EdgeInsets.only(left: 8.0),
                   child: TextField(
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     controller: controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Write Your Comment Here",
                       hintStyle: TextStyle(color: Colors.white),
                       border: InputBorder.none,
@@ -51,14 +56,16 @@ class WriteAComment extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  BlocProvider.of<CommentBloc>(context)
-                      .add(CommentEventAddComment(
-                    CommentForm(body: controller.text, postId: postId),
-                  ));
+                  debugPrint("Sending comment: ${controller.text}");
+                  BlocProvider.of<CommentBloc>(context).add(
+                    CommentEventAddComment(
+                      CommentForm(body: controller.text, postId: postId),
+                    ),
+                  );
                 },
                 icon: const Icon(Icons.send),
                 color: Colors.white,
-              )
+              ),
             ],
           ),
         ),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class CommentFormDto {
   final String body;
   final String postId;
@@ -8,16 +10,29 @@ class CommentFormDto {
   });
 
   factory CommentFormDto.fromJson(Map<String, dynamic> json) {
-    return CommentFormDto(
-      body: json['body'],
-      postId: json['postId']
-    );
+    try {
+      print("Parsing CommentFormDto from JSON: $json");
+      return CommentFormDto(
+        body: json['body'],
+        postId: json['postId'],
+      );
+    } catch (e) {
+      print("Error parsing CommentFormDto: $e");
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'body': body,
-      'postId': postId
-    };
+    try {
+      final jsonData = {
+        'body': body,
+        'postId': postId,
+      };
+      print("Converting CommentFormDto to JSON: $jsonData");
+      return jsonData;
+    } catch (e) {
+      print("Error converting CommentFormDto to JSON: $e");
+      rethrow;
+    }
   }
 }

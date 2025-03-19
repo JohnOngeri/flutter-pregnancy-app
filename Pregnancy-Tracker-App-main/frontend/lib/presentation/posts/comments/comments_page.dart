@@ -15,14 +15,23 @@ class CommentsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(post.id!);
+    debugPrint("Building CommentsPage for Post ID: ${post.id}");
+
     CommentAPI commentApi = CommentAPI();
+    debugPrint("Initialized CommentAPI");
+
     CommentRepository commentRepository = CommentRepository(commentApi);
+    debugPrint("Created CommentRepository");
+
     CommentBloc commentBloc =
         CommentBloc(commentRepositoryInterface: commentRepository);
+    debugPrint("Initialized CommentBloc");
 
     return BlocProvider(
-      create: (context) => commentBloc,
+      create: (context) {
+        debugPrint("Providing CommentBloc");
+        return commentBloc;
+      },
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         body: CommentsBody(post: post, profile: profile),

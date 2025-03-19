@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/application/comment/bloc/comment_bloc.dart';
@@ -25,49 +24,58 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
-    with TickerProviderStateMixin {
-  TabController? tabController;
-  int selectedIndex = 0;
-  late PostListBloc postListBloc;
-  late CommentBloc commentBloc;
-  late ProfileBloc profileBloc;
-
-  var icons = ["facebook", "mail", "instagram", "link"];
+class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
+  late TabController _tabController;
+  late PostListBloc _postListBloc;
+  late CommentBloc _commentBloc;
+  late ProfileBloc _profileBloc;
+  Uint8List? _decodedImage;
 
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this);
-    postListBloc = BlocProvider.of<PostListBloc>(context);
-    commentBloc = BlocProvider.of<CommentBloc>(context);
-    profileBloc = BlocProvider.of<ProfileBloc>(context);
-    fetchPosts('64773ac7ba6d773eeec4120e');
-    fetchComments('64773ac7ba6d773eeec4120e');
-    profileBloc
-        .add(ProfileEventGetProfile(profileId: '64773ac7ba6d773eeec4120e'));
+    _tabController = TabController(length: 3, vsync: this);
+    _postListBloc = BlocProvider.of<PostListBloc>(context);
+    _commentBloc = BlocProvider.of<CommentBloc>(context);
+    _profileBloc = BlocProvider.of<ProfileBloc>(context);
+    
+
+    // Fetch profile data
+    _fetchProfileData('64773ac7ba6d773eeec4120e');
   }
 
-  Future<void> fetchPosts(String userId) async {
-    print("fetching posts");
-    postListBloc.add(PostListEventLoadByAuthor(userId));
+  Future<void> _fetchProfileData(String userId) async {
+    _postListBloc.add(PostListEventLoadByAuthor(userId));
+    _commentBloc.add(CommentEventGetUserComments(userId));
+    _profileBloc.add(ProfileEventGetProfile(profileId: userId));
   }
 
-  Future<void> fetchComments(String userId) async {
-    print("fetching comments");
-    commentBloc.add(CommentEventGetUserComments(userId));
+  Future<void> _decodeImage(String profilePicture) async {
+    if (profilePicture.startsWith('http')) {
+      // If it's a URL, skip decoding
+      setState(() => _decodedImage = null);
+    } else if (_isValidBase64(profilePicture)) {
+      // If it's a valid Base64 string, decode it
+      try {
+        final bytes = base64Decode(profilePicture);
+        setState(() => _decodedImage = bytes);
+      } on FormatException catch (e) {
+        print("Error decoding image: $e");
+        setState(() => _decodedImage = null); // Fallback to local asset
+      }
+    } else {
+      // If it's not a URL or Base64, use the local asset
+      setState(() => _decodedImage = null);
+    }
   }
 
-  Uint8List? _decodedImage;
-
-  Future<void> decodeImage(String base64Image) async {
-    final bytes = base64Decode(base64Image);
-    setState(() {
-      _decodedImage = bytes;
-    });
-
-    print('decoded image $_decodedImage');
-    print('-------------------------------------------------------');
+  bool _isValidBase64(String str) {
+    try {
+      base64Decode(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override
@@ -78,195 +86,167 @@ class _ProfilePageState extends State<ProfilePage>
         child: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
             if (state is ProfileStateSuccess) {
-              final profile = state.profile;
-              decodeImage(profile.profilePicture);
+              // Decode image only if the profile picture has changed
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _decodeImage(state.profile.profilePicture);
+              });
 
               return NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                  SliverAppBar(
-                      expandedHeight: 200.0,
-                      floating: false,
-                      pinned: true,
-                      flexibleSpace: FlexibleSpaceBar(
-                        centerTitle: true,
-                        title: Text(
-                          '@${profile.userName}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 20.0,
-                          ),
-                        ),
-                        background: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.blue,
-                                Colors.blueAccent,
-                              ],
-                            ),
-                            image: _decodedImage != null
-                                ? DecorationImage(
-                                    image:
-                                        MemoryImage(_decodedImage as Uint8List),
-                                    fit: BoxFit.cover,
-                                  )
-                                : DecorationImage(
-                                    image: AssetImage(
-                                        Assets.assetsImagesWomanProfile),
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                        ),
-                      )),
-                  SliverAppBar(
-                    expandedHeight: 150.0,
-                    floating: false,
-                    pinned: true,
-                    flexibleSpace: FlexibleSpaceBar(
-                      centerTitle: true,
-                      title: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                        child: Text(
-                          '${profile.bio}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 15.0,
-                          ),
-                        ),
-                      ),
-                      background: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.blue,
-                              Colors.blueAccent,
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SliverPersistentHeader(
-                    delegate: _SliverAppBarDelegate(
-                      TabBar(
-                        controller: tabController,
-                        tabs: const [
-                          Tab(
-                            text: 'Posts',
-                          ),
-                          Tab(
-                            text: 'Comments',
-                          ),
-                          Tab(
-                            text: 'Likes',
-                          ),
-                        ],
-                        labelColor: Colors.black,
-                        unselectedLabelColor: Colors.black.withOpacity(0.3),
-                      ),
-                    ),
-                    pinned: true,
-                  ),
+                  _buildProfileHeader(state.profile),
+                  _buildTabBar(),
                 ],
                 body: TabBarView(
-                  controller: tabController,
+                  controller: _tabController,
                   children: [
-                    BlocBuilder<PostListBloc, PostListState>(
-                      builder: (context, state) {
-                        if (state is PostListStateLoading) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (state is PostListStateSuccess) {
-                          print(state.post);
-                          print('these are the posts');
-
-                          return ListView.builder(
-                            padding: EdgeInsets.symmetric(horizontal: 7.0),
-                            itemCount: state.post.length,
-                            itemBuilder: (context, index) {
-                              final post = state.post[index];
-                              // Fetch profile based on author ID
-
-                              return BlocBuilder<ProfileBloc, ProfileState>(
-                                builder: (context, profileState) {
-                                  if (profileState is ProfileStateSuccess) {
-                                    final profile = profileState.profile;
-                                    return PostCard(
-                                      author: profile.userName,
-                                      description: post.body,
-                                      likeCount: post.likes.length,
-                                      commentCount: post.comments.length,
-                                      imageUrl: profile.profilePicture,
-                                    );
-                                  } else {
-                                    return Center(
-                                        child: Text('Failed to load profile'));
-                                  }
-                                },
-                              );
-                            },
-                          );
-                        } else {
-                          return Center(child: Text('Failed to load posts'));
-                        }
-                      },
-                    ),
-                    BlocBuilder<CommentBloc, CommentState>(
-                      builder: (context, state) {
-                        if (state is CommentStateLoading) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (state is CommentStateSuccessMultiple) {
-                          print('these are the comments');
-                          print(state.comments);
-                          return ListView.builder(
-                            padding: EdgeInsets.symmetric(horizontal: 7.0),
-                            itemCount: state.comments.length,
-                            itemBuilder: (context, index) {
-                              final comment = state.comments[index];
-                              return CommentCard(
-                                description: comment.body,
-                              );
-                            },
-                          );
-                        } else {
-                          return Center(child: Text('Failed to load comments'));
-                        }
-                      },
-                    ),
-                    GridView.count(
-                      crossAxisCount: 2,
-                      children: List.generate(4, (index) {
-                        return Linkcard(icon: icons[index]);
-                      }),
-                    ),
+                    _buildPostsTab(),
+                    _buildCommentsTab(),
+                    _buildLinksTab(),
                   ],
                 ),
               );
             } else if (state is ProfileStateLoading) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else {
-              return Center(child: Text('Failed to load profile'));
+              return const Center(child: Text('Failed to load profile'));
             }
           },
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to the edit profile page
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => EditProfile()),
-          );
-        },
-        child: Icon(Icons.edit),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EditProfile()),
+        ),
+        child: const Icon(Icons.edit),
       ),
     );
   }
 
-  Future<void> fetchProfile(String profileId) async {
-    profileBloc.add(ProfileEventGetProfile(profileId: profileId));
+  SliverAppBar _buildProfileHeader(profile) {
+    return SliverAppBar(
+      expandedHeight: 200.0,
+      floating: false,
+      pinned: true,
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: true,
+        title: Text(
+          '@${profile.userName}',
+          style: const TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 20.0,
+          ),
+        ),
+        background: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Colors.blue, Colors.blueAccent],
+            ),
+            image: DecorationImage(
+              image: _getProfileImageProvider(profile.profilePicture),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+    );
   }
+
+  ImageProvider _getProfileImageProvider(String profilePicture) {
+    if (_decodedImage != null) {
+      return MemoryImage(_decodedImage!);
+    } else if (profilePicture.startsWith('http')) {
+      return NetworkImage(profilePicture);
+    } else {
+      return AssetImage(Assets.assetsImagesWomanProfile);
+    }
+  }
+
+  // Other methods (_buildTabBar, _buildPostsTab, _buildCommentsTab, _buildLinksTab) remain the same
 }
+
+  SliverPersistentHeader _buildTabBar() {
+    return SliverPersistentHeader(
+      delegate: _SliverAppBarDelegate(
+        TabBar(
+          
+          tabs: const [
+            Tab(text: 'Posts'),
+            Tab(text: 'Comments'),
+            Tab(text: 'Likes'),
+          ],
+          labelColor: Colors.black,
+          unselectedLabelColor: Colors.black.withOpacity(0.3),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPostsTab() {
+    return BlocBuilder<PostListBloc, PostListState>(
+      builder: (context, state) {
+        if (state is PostListStateLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is PostListStateSuccess) {
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 7.0),
+            itemCount: state.post.length,
+            itemBuilder: (context, index) {
+              final post = state.post[index];
+              return BlocBuilder<ProfileBloc, ProfileState>(
+                builder: (context, profileState) {
+                  if (profileState is ProfileStateSuccess) {
+                    return PostCard(
+                      author: profileState.profile.userName,
+                      description: post.body,
+                      likeCount: post.likes.length,
+                      commentCount: post.comments.length,
+                      imageUrl: profileState.profile.profilePicture,
+                    );
+                  } else {
+                    return const Center(child: Text('Failed to load profile'));
+                  }
+                },
+              );
+            },
+          );
+        } else {
+          return const Center(child: Text('Failed to load posts'));
+        }
+      },
+    );
+  }
+
+  Widget _buildCommentsTab() {
+    return BlocBuilder<CommentBloc, CommentState>(
+      builder: (context, state) {
+        if (state is CommentStateLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is CommentStateSuccessMultiple) {
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 7.0),
+            itemCount: state.comments.length,
+            itemBuilder: (context, index) {
+              final comment = state.comments[index];
+              return CommentCard(description: comment.body);
+            },
+          );
+        } else {
+          return const Center(child: Text('Failed to load comments'));
+        }
+      },
+    );
+  }
+
+  Widget _buildLinksTab() {
+    return GridView.count(
+      crossAxisCount: 2,
+      children: List.generate(4, (index) {
+        return Linkcard(icon: 'path/to/icon$index.png');
+      }),
+    );
+  }
+
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar tabBar;
@@ -274,8 +254,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate(this.tabBar);
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: Colors.white,
       child: tabBar,
@@ -289,9 +268,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => tabBar.preferredSize.height;
 
   @override
-  bool shouldRebuild(covariant _SliverAppBarDelegate oldDelegate) {
-    return false;
-  }
+  bool shouldRebuild(covariant _SliverAppBarDelegate oldDelegate) => false;
 }
 
 class EditProfilePage extends StatelessWidget {
@@ -299,9 +276,9 @@ class EditProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Edit Profile Page'),
       ),
     );

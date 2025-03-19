@@ -6,15 +6,31 @@ import 'package:frontend/infrastructure/comment/comment_form_dto.dart';
 
 extension CFMapper on CommentForm {
   CommentFormDto toDto() {
-    return CommentFormDto(
-      body: body,
-      postId: postId
-    );
+    try {
+      print("Mapping CommentForm to CommentFormDto: body = $body, postId = $postId");
+      return CommentFormDto(
+        body: body,
+        postId: postId,
+      );
+    } catch (e) {
+      print("Error mapping CommentForm to CommentFormDto: $e");
+      rethrow;
+    }
   }
 }
 
 extension CFMapper2 on CommentFormDto {
   CommentDto toAuthoredDto(String author) {
-    return CommentDto(body: body, postId: postId, author: author);
+    try {
+      print("Mapping CommentFormDto to CommentDto with author: $author");
+      return CommentDto(
+        body: body,
+        postId: postId,
+        author: author,
+      );
+    } catch (e) {
+      print("Error mapping CommentFormDto to CommentDto: $e");
+      rethrow;
+    }
   }
 }

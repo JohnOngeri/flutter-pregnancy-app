@@ -19,7 +19,7 @@ class CommentsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+    print('CommentsBody: Building widget for post - ${post.id}');
     Size size = MediaQuery.of(context).size;
     return SizedBox(
       height: size.height,
@@ -42,14 +42,13 @@ class CommentsBody extends StatelessWidget {
                 ),
                 const CommentsText(),
                 //comments list
-                  ComentList(postId: post.id!,),
+                ComentList(postId: post.id!),
               ],
             ),
           ),
 
           // write a comment here
-
-          WriteAComment(size: size, postId: post.id!,),
+          WriteAComment(size: size, postId: post.id!),
         ],
       ),
     );
@@ -63,6 +62,7 @@ class CommentsText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('CommentsText: Building widget');
     ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -91,6 +91,7 @@ class CommentsAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('CommentsAppBar: Building widget');
     return Container(
       height: 90,
       width: size.width,
@@ -101,6 +102,7 @@ class CommentsAppBar extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () {
+              print('CommentsAppBar: Back button pressed');
               Navigator.pop(context);
             },
             icon: const Icon(Icons.arrow_back),
@@ -133,6 +135,7 @@ class PostItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('PostItem: Building widget for post - ${post.id}');
     ThemeData theme = Theme.of(context);
     return Container(
       width: size.width,
@@ -153,14 +156,18 @@ class PostItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    ("${profile.firstName} ${profile.lastName}").length > 1 ? "${profile.firstName} ${profile.lastName}" : "Anonymous",
+                    ("${profile.firstName} ${profile.lastName}").length > 1
+                        ? "${profile.firstName} ${profile.lastName}"
+                        : "Anonymous",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: theme.colorScheme.onSecondary),
                   ),
                   Text(
-                    ("@${profile.userName}").length > 1 ? "@${profile.userName}" : "@Anon",
+                    ("@${profile.userName}").length > 1
+                        ? "@${profile.userName}"
+                        : "@Anon",
                     style: TextStyle(color: Colors.grey),
                   )
                 ],
@@ -186,7 +193,9 @@ class PostItem extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      print('PostItem: Comment button pressed');
+                    },
                     icon: const Icon(Icons.comment),
                   ),
                   Text(
@@ -198,7 +207,9 @@ class PostItem extends StatelessWidget {
               Row(
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      print('PostItem: Like button pressed');
+                    },
                     child: Image.asset(
                       Assets.assetsImagesFavorite,
                       scale: 2,

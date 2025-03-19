@@ -76,7 +76,7 @@ flutter_assets:
   filename: assets.dart
     - assets/images/
     - assets/icons/
-
+    - assets/default.png
 
 
   uses-material-design: true

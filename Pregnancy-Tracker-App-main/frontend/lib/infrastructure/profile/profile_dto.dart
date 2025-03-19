@@ -7,9 +7,9 @@ class ProfileDto {
   final String bio;
   final List<String> followers;
   final List<String> following;
-  final List<String> posts;
-  final List<String> comments;
-  final List<String> socialMedia;
+  final List<String> posts; // Changed back to List<String>
+  final List<String> comments; // Changed back to List<String>
+  final List<String> socialMedia; // Changed back to List<String>
 
   ProfileDto({
     this.id,
@@ -25,21 +25,24 @@ class ProfileDto {
     required this.socialMedia,
   });
 
-  factory ProfileDto.fromJson(Map<String, dynamic> json) {
-    return ProfileDto(
-      id: json['_id'],
-      userName: json['username'],
-      firstName: json['firstname'],
-      lastName: json['lastname'],
-      profilePicture: json['image'],
-      bio: json['bio'],
-      followers: (json['followers'] as List<dynamic>).cast<String>(),
-      following: (json['following'] as List<dynamic>).cast<String>(),
-      posts: (json['posts'] as List<dynamic>).cast<String>(),
-      comments: (json['comments'] as List<dynamic>).cast<String>(),
-      socialMedia: (json['socialMedia'] as List<dynamic>).cast<String>(),
-    );
-  }
+ factory ProfileDto.fromJson(Map<String, dynamic> json) {
+  print("🔍 Parsing ProfileDto JSON: $json"); // Debugging log
+
+  return ProfileDto(
+    id: json['_id'] as String?,
+    userName: json['username'] ?? 'Unknown',
+    firstName: json['firstname'] ?? '',
+    lastName: json['lastname'] ?? '',
+    profilePicture: json['image'] ?? 'default.png',
+    bio: json['bio'] ?? '',
+    followers: (json['followers'] as List<dynamic>?)?.whereType<String>().toList() ?? [],
+    following: (json['following'] as List<dynamic>?)?.whereType<String>().toList() ?? [],
+    posts: (json['posts'] as List<dynamic>?)?.whereType<String>().toList() ?? [], // ✅ Removes nulls
+    comments: (json['comments'] as List<dynamic>?)?.whereType<String>().toList() ?? [],
+    socialMedia: (json['socialMedia'] as List<dynamic>?)?.whereType<String>().toList() ?? [],
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {

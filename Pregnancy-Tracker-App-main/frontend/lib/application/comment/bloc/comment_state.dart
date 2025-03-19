@@ -22,12 +22,16 @@ class CommentState {
     CommentDomain? comment,
   }) {
     if (comments != null) {
+      print('CommentState: Copying with comments - ${comments.length} comments');
       return CommentState.successMultiple(comments);
     } else if (failure != null) {
+      print('CommentState: Copying with failure - $failure');
       return CommentState.failure(failure);
     } else if (comment != null) {
+      print('CommentState: Copying with comment - ${comment.id}');
       return CommentState.success(comment);
     } else {
+      print('CommentState: Copying with no changes');
       return this;
     }
   }
@@ -35,16 +39,34 @@ class CommentState {
 
 class CommentStateInitial extends CommentState {
   const CommentStateInitial() : super._();
+
+  @override
+  String toString() {
+    print('CommentStateInitial: Created');
+    return 'CommentStateInitial()';
+  }
 }
 
 class CommentStateLoading extends CommentState {
   const CommentStateLoading() : super._();
+
+  @override
+  String toString() {
+    print('CommentStateLoading: Created');
+    return 'CommentStateLoading()';
+  }
 }
 
 class CommentStateSuccess extends CommentState {
   final CommentDomain comment;
 
   const CommentStateSuccess(this.comment) : super._();
+
+  @override
+  String toString() {
+    print('CommentStateSuccess: Created with comment - ${comment.id}');
+    return 'CommentStateSuccess(comment: $comment)';
+  }
 
   @override
   bool operator ==(Object other) =>
@@ -63,6 +85,12 @@ class CommentStateSuccessMultiple extends CommentState {
   const CommentStateSuccessMultiple(this.comments) : super._();
 
   @override
+  String toString() {
+    print('CommentStateSuccessMultiple: Created with ${comments.length} comments');
+    return 'CommentStateSuccessMultiple(comments: $comments)';
+  }
+
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is CommentStateSuccessMultiple &&
@@ -79,6 +107,12 @@ class CommentStateFailure extends CommentState {
   const CommentStateFailure(this.failure) : super._();
 
   @override
+  String toString() {
+    print('CommentStateFailure: Created with failure - $failure');
+    return 'CommentStateFailure(failure: $failure)';
+  }
+
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is CommentStateFailure &&
@@ -91,4 +125,10 @@ class CommentStateFailure extends CommentState {
 
 class CommentStateDeleted extends CommentState {
   const CommentStateDeleted() : super._();
+
+  @override
+  String toString() {
+    print('CommentStateDeleted: Created');
+    return 'CommentStateDeleted()';
+  }
 }

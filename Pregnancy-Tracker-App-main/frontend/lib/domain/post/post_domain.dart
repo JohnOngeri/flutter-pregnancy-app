@@ -15,15 +15,16 @@ class PostDomain {
     this.id,
   });
 
-  factory PostDomain.fromJson(Map<String, dynamic> json) {
-    return PostDomain(
-      body: json['body'] as String,
-      author: json['author'] as String,
-      comments: (json['comments'] as List<dynamic>).cast<String>(),
-      likes: (json['likes'] as List<dynamic>).cast<String>(),
-      id: json['id'] as String,
-    );
-  }
+ factory PostDomain.fromJson(Map<String, dynamic> json) {
+  return PostDomain(
+    body: json['body'] as String? ?? '',
+    author: json['author'] as String? ?? '',
+    comments: (json['comments'] as List<dynamic>?)?.cast<String>() ?? [],
+    likes: (json['likes'] as List<dynamic>?)?.cast<String>() ?? [],
+    id: json['_id'] as String? ?? json['id'] as String?,
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {
