@@ -44,7 +44,7 @@ export class AuthService {
       throw new ForbiddenException('Access Denied');
     }
 
-    const token = await this.getToken(userName, user._id, user.roles);
+    const token = await this.getToken(userName, user._id, user.roles, user.profileId);
 
     return { user, ...token };
   }
@@ -68,15 +68,16 @@ export class AuthService {
     return await this.userService.update(user._id, update);
   }
 
-  async getToken(username: string, id: string, roles: Role[]) {
-    const payload = { username, sub: id, roles: roles };
+  async getToken(username: string, id: string, roles: Role[], profileId: string) {
+    const payload = { username, sub: id, roles, profileId }; // ✅ Add profileId
     const token = await this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_SECRET'),
-      expiresIn: 3600 * 24 * 7 * 2,
+      expiresIn: 3600 * 24 * 7 * 2, // 2 weeks
     });
-
+  
     return { access_token: token };
   }
+  
   
   async logout() {}
 }
