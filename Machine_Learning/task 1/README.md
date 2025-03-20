@@ -14,7 +14,7 @@ This folder contains a machine learning model for predicting birth weight based 
 ### **1️⃣ API Endpoint**  
 The model is accessible via a publicly available API endpoint. This endpoint returns birth weight predictions based on input values.  
 
-🔗 **API Endpoint:**'https://flutter-pregnancy-app-4.onrender.com/predict'  
+🔗 **API Endpoint:**'https://flutter-pregnancy-app-4.onrender.com 
 
 You can test the API using **Swagger UI** at:  
 🔗 **Swagger URL:**https://flutter-pregnancy-app-4.onrender.com/docs 
