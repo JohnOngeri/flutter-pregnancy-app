@@ -17,7 +17,7 @@ The model is accessible via a publicly available API endpoint. This endpoint ret
 🔗 **API Endpoint:**'https://flutter-pregnancy-app-4.onrender.com/predict'  
 
 You can test the API using **Swagger UI** at:  
-🔗 **Swagger URL:**(https://flutter-pregnancy-app-4.onrender.com/docs#/default/predict_birthweight_predict_post) 
+🔗 **Swagger URL:**https://flutter-pregnancy-app-4.onrender.com/docs 
 
 ### **2️⃣ Running the API Locally**  
 To run the API locally:  
