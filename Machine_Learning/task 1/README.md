@@ -1,9 +1,12 @@
-🎯 Mission
+**🎯 Mission**
+
 To leverage machine learning for accurately predicting birth weight based on maternal and prenatal health factors, improving early risk assessment for newborns.
 
-📄 Brief Description
+**📄 Brief Description**
+
 This project implements a machine learning model to predict birth weight using key maternal and prenatal parameters such as gestation period, parity, age, height, weight, and smoking status. The model is deployed via an API, allowing users to access predictions remotely.
-📊 Source of Data
+
+**📊 Source of Data**
 The dataset used for training and testing the model was obtained from Kaggle. It includes key maternal health indicators and birth outcomes, enabling the development of a predictive model for birth weight.
 
 📌 Dataset & Analysis: https://www.kaggle.com/code/sahanasantosh/birthweight-prediction/notebook
