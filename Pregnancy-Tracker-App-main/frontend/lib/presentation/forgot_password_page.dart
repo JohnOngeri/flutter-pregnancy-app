@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+  final Function onPasswordReset;
+
+  const ForgotPasswordPage({super.key, required this.onPasswordReset});
 
   @override
   _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
@@ -23,6 +25,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     try {
       await _auth.sendPasswordResetEmail(email: email);
       _showMessage("Password reset email sent! Check your inbox.");
+
+      // Call the callback to notify the landing page to refresh
+      widget.onPasswordReset();
+
+      // Navigate back to the login page (using Navigator.pop to go back)
+      Navigator.pop(
+          context); // This pops the ForgotPasswordPage and returns to the login screen.
     } catch (e) {
       _showMessage("Error: ${e.toString()}");
     }
