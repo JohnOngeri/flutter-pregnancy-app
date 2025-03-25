@@ -1,19 +1,21 @@
 class ProfileForm {
-  final String firstName;
-  final String lastName;
-  final String bio;
-  final List<String> followers;
-  final List<String> following;
-  final List<String> socialMedia;
-  final String profilePicture;
+  final String? firstName;
+  final String? lastName;
+  final List<String>? followers; // Ensure this is List<String>
+  final List<String>? following; // Ensure this is List<String>
+  final String? profilePicture;
+  final List<String>? socialMedia; // Ensure this is List<String>
+  final String? bio;
+  final String? userName;
 
   ProfileForm({
-    required this.firstName,
-    required this.lastName,
-    required this.bio,
-    required this.followers,
-    required this.following,
-    required this.socialMedia,
-    required this.profilePicture,
+    this.firstName,
+    this.lastName,
+    this.followers,
+    this.following,
+    this.profilePicture,
+    this.socialMedia,
+    this.bio,
+    this.userName,
   });
 }
