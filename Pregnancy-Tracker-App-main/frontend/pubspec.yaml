@@ -42,6 +42,7 @@ dependencies:
   sqflite_common_ffi: ^2.3.4
   sqflite_common_ffi_web: ^0.4.5+3
   youtube_player_flutter: 9.1.1
+  url_launcher: ^6.0.10
   
  
 

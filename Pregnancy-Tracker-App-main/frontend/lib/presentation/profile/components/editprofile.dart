@@ -12,7 +12,38 @@ import 'package:frontend/presentation/profile/components/textfield.dart';
 import 'package:frontend/presentation/profile/components/profileavatar.dart';
 import 'dart:convert';
 
-
+class EditProfilePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Edit Profile'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                // Add functionality to upload a new profile picture
+                print('Upload profile picture');
+              },
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage:
+                    AssetImage('assets/images/placeholder_person.png'),
+                child:
+                    const Icon(Icons.camera_alt, size: 30, color: Colors.white),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text('Tap to change profile picture'),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -42,6 +73,7 @@ class _EditProfileState extends State<EditProfile> {
   late String lastName = '';
   late String imageUrl = '';
   late String bio = '';
+  late String username = '';
 
   @override
   void initState() {
@@ -79,7 +111,6 @@ class _EditProfileState extends State<EditProfile> {
                 children: [
                   const SizedBox(height: 44),
                   Container(
-                    // make this container transparent
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       children: [
@@ -126,17 +157,11 @@ class _EditProfileState extends State<EditProfile> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: TextFieldWidget(
-                      label: 'Full Name',
-                      text: "${profile.firstName} ${profile.lastName}",
+                      label: 'Username',
+                      text: profile.userName,
                       onChanged: (name) {
-                        print('name is $name');
-                        final names = name != " "
-                            ? name.split(' ')
-                            : [profile.firstName, profile.lastName];
-
                         setState(() {
-                          firstName = names[0];
-                          lastName = names[1];
+                          username = name != '' ? name : profile.userName;
                         });
                       },
                     ),
@@ -147,24 +172,9 @@ class _EditProfileState extends State<EditProfile> {
                     child: TextFieldWidget(
                       label: 'Password',
                       text: "*********",
-                      onChanged: (name) {
+                      onChanged: (password) {
                         setState(() {
-                          firstName = name != ' ' ? name : profile.firstName;
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: TextFieldWidget(
-                      label: 'About',
-                      text: profile.bio,
-                      maxLines: 5,
-                      onChanged: (about) {
-                        setState(() {
-                          print('about is $about');
-                          bio = about != ' ' ? about : profile.bio;
+                          // Handle password change logic here
                         });
                       },
                     ),
@@ -186,30 +196,23 @@ class _EditProfileState extends State<EditProfile> {
                           });
                         }
 
-                        print('$firstName $lastName $bio we are printing');
-                        print(
-                            '${profile.firstName} ${profile.lastName} ${profile.bio} we are printing');
-
                         ProfileForm profileForm = ProfileForm(
-                          firstName:
-                              firstName != '' ? firstName : profile.firstName,
-                          lastName:
-                              lastName != '' ? lastName : profile.lastName,
+                          firstName: profile.firstName,
+                          lastName: profile.lastName,
                           followers: profile.followers,
                           following: profile.following,
                           profilePicture: imageUrl != ''
                               ? imageUrl
                               : profile.profilePicture,
                           socialMedia: profile.socialMedia,
-                          bio: bio != '' ? bio : profile.bio,
+                          bio: profile.bio,
+                          userName: username != ''
+                              ? username
+                              : profile.userName, // Pass userName here
                         );
 
-                        print('decode image $imageUrl');
-                        print('decode image ${profile.profilePicture}');
-                        print(
-                            "--------------------------------------------------");
                         profileBloc.add(ProfileEventUpdate(
-                            profileId: '64773ac7ba6d773eeec4120e',
+                            profileId: profile.id ?? '',
                             profileForm: profileForm));
 
                         Navigator.pop(context);
