@@ -45,6 +45,9 @@ dependencies:
   url_launcher: ^6.0.10
   
  
+  
+  sqlite3_flutter_libs: ^0.5.0
+  
 
   flutter_inappwebview: ^6.0.0 # Check latest version on pub.dev
 

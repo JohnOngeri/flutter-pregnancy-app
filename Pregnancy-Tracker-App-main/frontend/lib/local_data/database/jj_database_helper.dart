@@ -36,6 +36,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart'
  show databaseFactory, databaseFactoryFfi;
  import 'package:flutter/foundation.dart'; // for kIsWeb
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart'; // for web factory
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._privateConstructor();
@@ -45,31 +46,40 @@ class DatabaseHelper {
   DatabaseHelper._privateConstructor();
   static DatabaseHelper get instance => _instance;
 
-  Future<Database> get database async {
-    return _database ??= await _initDatabase();
+Future<Database> get database async {
+  print('Getting database...'); // Debugging print statement
+  print('_database is currently: $_database'); // Debugging print statement
+  if (_database == null) {
+    _database = await _initDatabase();
   }
+  return _database?? await _initDatabase();
+}
 
   // Initialize database
   // Initialize database
- Future<Database> _initDatabase() async {
-  if (kIsWeb) {
-    // For web: Use sqflite_common_ffi_web
-    databaseFactory = databaseFactoryFfiWeb;
-    String path = 'my_web_web.db'; // Provide a web-friendly database name
-    return await openDatabase(
+Future<Database> _initDatabase() async {
+  try {
+    // ... (rest of the method remains the same)
+
+    final path = kIsWeb 
+      ? 'pregnancy_tracker.db' 
+      : join(await getDatabasesPath(), 'pregnancy_tracker.db');
+
+    print('Database path: $path'); // Add this line to print the database path
+
+    return await databaseFactory.openDatabase(
       path,
-      version: 3,
-      onCreate: _onCreate,
+      options: OpenDatabaseOptions(
+        version: 3,
+        onCreate: _onCreate,
+        onConfigure: (db) async {
+          await db.execute('PRAGMA foreign_keys = ON');
+        },
+      ),
     );
-  } else {
-    // For non-web: Use default factory
-    databaseFactory = databaseFactoryFfi;
-    String path = join(await getDatabasesPath(), 'Pregnancy Tracker.db');
-    return await openDatabase(
-      path,
-      version: 3,
-      onCreate: _onCreate,
-    );
+  } catch (e) {
+    print('Error opening database: $e'); // Add this line to print the error
+    rethrow;
   }
 }
 
@@ -188,26 +198,48 @@ class DatabaseHelper {
   }
 
   // get by id requests
-  Future<List<AppointmentDomain>> getAppointmentsByUser(String author) async {
+  Future<List<AppointmentDomain>> getAppointmentsByUser(String author, 
+    {bool forceRefresh = false}) async {
+  try {
     final Database db = await database;
+    
+    // Clear cache if forcing refresh (optional)
+    if (forceRefresh) {
+      await db.execute('PRAGMA wal_checkpoint(FULL)');
+    }
+
     final List<Map<String, dynamic>> appointmentList =
-        await db.query("appointment", where: "author = ?", whereArgs: [author]);
-    List<AppointmentEntity> appointmentEntityList = appointmentList.isEmpty
-        ? []
-        : appointmentList
-            .map((appointment) => AppointmentEntity.fromJson(appointment))
-            .toList();
+        await db.query(
+          "appointment", 
+          where: "author = ?", 
+          whereArgs: [author],
+          // Ensure we get fresh data
+          
+        );
 
-    List<AppointmentDomain> appointmentDomainList =
-        appointmentEntityList.isEmpty
-            ? []
-            : appointmentEntityList
-                .map((appointment) => appointment.toAppointmentDomain())
-                .toList();
-
-    return appointmentDomainList;
+    // Convert to domain objects
+    return appointmentList
+        .map((appointment) => AppointmentEntity.fromJson(appointment).toAppointmentDomain())
+        .toList();
+        
+  } catch (e) {
+    debugPrint('Error fetching appointments: $e');
+    rethrow;
   }
+}
 
+// Add this companion method to handle updates
+Future<List<AppointmentDomain>> updateAndRefreshAppointments(
+    String author, 
+    Future<void> Function() updateOperation) async {
+  try {
+    await updateOperation(); // Perform the update
+    return await getAppointmentsByUser(author, forceRefresh: true);
+  } catch (e) {
+    debugPrint('Refresh failed: $e');
+    rethrow;
+  }
+}
   Future<List<CommentDomain>> getCommentsByUser(String author) async {
     final Database db = await database;
     final List<Map<String, dynamic>> commentList =

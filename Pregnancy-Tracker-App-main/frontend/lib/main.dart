@@ -1,6 +1,12 @@
-import 'package:dartz/dartz_streaming.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:go_router/go_router.dart';
+import 'package:frontend/firebase_options.dart';
+
+// Application layer
 import 'package:frontend/application/appointment/bloc/appointment_bloc.dart';
 import 'package:frontend/application/comment/bloc/comment_bloc.dart';
 import 'package:frontend/application/note/bloc/note_bloc.dart';
@@ -8,144 +14,108 @@ import 'package:frontend/application/page_provider/bloc/page_provider_bloc.dart'
 import 'package:frontend/application/post/post_list/bloc/post_list_bloc.dart';
 import 'package:frontend/application/tip/bloc/tip_bloc.dart';
 import 'package:frontend/application/profile/bloc/profile_bloc.dart';
-import 'package:frontend/application/prediction_bloc.dart';// Import PredictionsBloc
-import 'package:frontend/infrastructure/comment/comment_api.dart';
-import 'package:frontend/infrastructure/comment/comment_repository.dart';
+import 'package:frontend/application/prediction_bloc.dart';
+
+// Domain interfaces
+import 'package:frontend/domain/note/note_repository_interface.dart';
+import 'package:frontend/domain/comment/comment_repository_interface.dart';
+import 'package:frontend/domain/profile/profile_repository_interface.dart';
+import 'package:frontend/domain/appointment/appointment_repository_interface.dart';
+import 'package:frontend/domain/tip/tip_repository_interface.dart';
+import 'package:frontend/domain/post/post_repository_interface.dart';
+import 'package:frontend/domain/prediction_repository.dart';
+
+// Infrastructure
 import 'package:frontend/infrastructure/note/note_api.dart';
 import 'package:frontend/infrastructure/note/note_repository.dart';
+import 'package:frontend/infrastructure/comment/comment_api.dart';
+import 'package:frontend/infrastructure/comment/comment_repository.dart';
+import 'package:frontend/infrastructure/profile/profile_api.dart';
+import 'package:frontend/infrastructure/profile/profile_repository.dart';
+import 'package:frontend/infrastructure/appointment/appointment_api.dart';
+import 'package:frontend/infrastructure/appointment/appointment_repository.dart';
+import 'package:frontend/infrastructure/tip/tip_api.dart';
+import 'package:frontend/infrastructure/tip/tip_repository.dart';
 import 'package:frontend/infrastructure/post/post_api.dart';
 import 'package:frontend/infrastructure/post/post_repository.dart';
-import 'package:frontend/infrastructure/prediction_service.dart'; // Import PredictionsAPI
-import 'package:frontend/domain/prediction_repository.dart'; // Import PredictionsRepository
-import 'package:frontend/presentation/core/Themes/light_theme.dart';
-import 'package:frontend/presentation/landingpage/landing_page.dart';
-import 'package:frontend/presentation/login/login_page.dart';
-import 'package:frontend/presentation/posts/posts_page.dart';
-import 'package:frontend/infrastructure/profile/profile_repository.dart';
-import 'package:frontend/presentation/BabyStatus/baby_status_page.dart';
-import 'package:frontend/presentation/appointments/appointment_page.dart';
-import 'package:frontend/presentation/appointments/components/add_appointmentpage.dart';
-import 'package:frontend/presentation/notes/symptoms/notes_page.dart';
-import 'package:frontend/presentation/profile/components/editprofile.dart';
-import 'package:frontend/presentation/profile/profile.dart';
-import 'package:frontend/presentation/signup/signup_page.dart';
-import 'package:frontend/presentation/tips/home_page.dart';
-import 'package:go_router/go_router.dart';
-import 'infrastructure/appointment/appointment_api.dart';
-import 'infrastructure/appointment/appointment_repository.dart';
-import 'infrastructure/profile/profile_api.dart';
-import 'infrastructure/tip/tip_api.dart';
-import 'infrastructure/tip/tip_repository.dart';
-import 'presentation/routes/routes.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:frontend/firebase_options.dart';
-import '../domain/prediction_repository_impl.dart';
+import 'package:frontend/infrastructure/prediction_service.dart';
+import 'package:frontend/domain/prediction_repository_impl.dart';
+// main.dart
+import 'package:frontend/infrastructure/profile/profile_api.dart';
 
+// ...
+// Presentation
+import 'package:frontend/presentation/core/Themes/light_theme.dart';
+import 'package:frontend/presentation/routes/routes.dart';
 
 void main() async {
+  // Initialize SQLite FFI
+  sqfliteFfiInit();
+  
   WidgetsFlutterBinding.ensureInitialized();
   
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  ).then((value) {
-    print('Firebase initialized successfully');
-  }).catchError((error) {
-    print('Error initializing Firebase: $error');
-  });
+  // Initialize Firebase
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint('Firebase initialized successfully');
+  } catch (error) {
+    debugPrint('Error initializing Firebase: $error');
+    rethrow;
+  }
 
-  // Initialize repositories and blocs
-  NoteAPI noteApi = NoteAPI();
-  NoteRepository noteRepository = NoteRepository(noteApi);
-  NoteBloc noteBloc = NoteBloc(noteRepositoryInterface: noteRepository);
+  // Initialize API clients
+  final noteApi = NoteAPI();
+  final postApi = PostAPI();
+  final commentApi = CommentAPI();
+  final profileApi = ProfileApi();
+  final appointmentApi = AppointmentAPI();
+  final tipApi = TipAPI();
+  final predictionService = PredictionService();
 
-  PostAPI postApi = PostAPI();
-  PostRepository postRepository = PostRepository(postApi);
-  PostListBloc postBloc = PostListBloc(postRepository: postRepository);
-
-  CommentAPI commentAPI = CommentAPI();
-  CommentRepository commentRepository = CommentRepository(commentAPI);
-  CommentBloc commentBloc = CommentBloc(commentRepositoryInterface: commentRepository);
-
-  ProfileApi profileApi = ProfileApi();
-  ProfileRepository profileRepository = ProfileRepository(profileApi);
-  ProfileBloc profileBloc = ProfileBloc(profileRepositoryInterface: profileRepository);
-
-  AppointmentAPI appointmentApi = AppointmentAPI();
-  AppointmentRepository appointmentRepository = AppointmentRepository(appointmentApi);
-  AppointmentBloc appointmentBloc = AppointmentBloc(appointmentRepositoryInterface: appointmentRepository);
-
-  TipAPI tipApi = TipAPI();
-  TipRepository tipRepository = TipRepository(tipApi);
-  TipBloc tipBloc = TipBloc(tipRepositoryInterface: tipRepository);
-
-  // Initialize PredictionsBloc
-  PredictionService predictionService = PredictionService();
-  PredictionRepository predictionsRepository = PredictionRepositoryImpl(predictionService);
-  PredictionBloc predictionBloc = PredictionBloc(predictionsRepository as PredictionRepositoryImpl);
+  // Initialize repositories with their dependencies
+  final NoteRepositoryInterface noteRepository = NoteRepository(noteApi);
+  final PostRepositoryInterface postRepository = PostRepository(postApi);
+  final CommentRepositoryInterface commentRepository = CommentRepository(commentApi);
+  final ProfileRepositoryInterface profileRepository = ProfileRepository(profileApi);
+  final AppointmentRepositoryInterface appointmentRepository = AppointmentRepository(appointmentApi);
+  final TipRepositoryInterface tipRepository = TipRepository(tipApi);
+  final PredictionRepository predictionRepository = PredictionRepositoryImpl(predictionService);
 
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider<NoteBloc>.value(value: noteBloc),
-        BlocProvider<PostListBloc>.value(value: postBloc),
-        BlocProvider<AppointmentBloc>.value(value: appointmentBloc),
-        BlocProvider<TipBloc>.value(value: tipBloc),
-        BlocProvider<CommentBloc>.value(value: commentBloc),
-        BlocProvider<ProfileBloc>.value(value: profileBloc),
-        BlocProvider<PredictionBloc>.value(value: predictionBloc), // Add PredictionsBloc
+        BlocProvider(create: (_) => NoteBloc(noteRepositoryInterface: noteRepository)),
+        BlocProvider(create: (_) => PostListBloc(postRepository: postRepository)),
+        BlocProvider(create: (_) => AppointmentBloc(appointmentRepositoryInterface: appointmentRepository)),
+        BlocProvider(create: (_) => TipBloc(tipRepositoryInterface: tipRepository)),
+        BlocProvider(create: (_) => CommentBloc(commentRepositoryInterface: commentRepository)),
+        BlocProvider(create: (_) => ProfileBloc(profileRepositoryInterface: profileRepository)),
+        BlocProvider(create: (_) => PredictionBloc(predictionRepository as PredictionRepositoryImpl)),
+        BlocProvider(create: (_) => PageProviderBloc()),
       ],
-      child: MyApp(
-        noteBloc: noteBloc,
-        appointmentBloc: appointmentBloc,
-        postBloc: postBloc,
-        commentBloc: commentBloc,
-        profileBloc: profileBloc,
-        predictionsBloc: predictionBloc, // Pass PredictionsBloc to MyApp
-      ),
+      child: const App(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  final NoteBloc noteBloc;
-  final PostListBloc postBloc;
-  final AppointmentBloc appointmentBloc;
-  final CommentBloc commentBloc;
-  final ProfileBloc profileBloc;
-  final PredictionBloc predictionsBloc; // Add PredictionsBloc
-
-  const MyApp({
-    Key? key,
-    required this.noteBloc,
-    required this.postBloc,
-    required this.appointmentBloc,
-    required this.profileBloc,
-    required this.commentBloc,
-    required this.predictionsBloc, // Add PredictionsBloc
-  }) : super(key: key);
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Timeline Demo',
+      title: 'Pregnancy Tracker',
       theme: LightTheme().getThemeData,
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider<NoteBloc>.value(value: noteBloc),
-          BlocProvider<PostListBloc>.value(value: postBloc),
-          BlocProvider<CommentBloc>.value(value: commentBloc),
-          BlocProvider<ProfileBloc>.value(value: profileBloc),
-          BlocProvider<PageProviderBloc>.value(value: PageProviderBloc()),
-          BlocProvider<PredictionBloc>.value(value: predictionsBloc), // Add PredictionsBloc
-        ],  
-        child: Scaffold(
-          body: MaterialApp.router(
-            theme: LightTheme().getThemeData,
-            routerConfig: router,
-          ),
-        ),
-      ),
+      routerConfig: router,
+      builder: (context, child) {
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: child,
+        );
+      },
     );
   }
 }
