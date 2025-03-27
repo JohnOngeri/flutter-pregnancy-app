@@ -12,106 +12,88 @@ export class CommentsService {
     @InjectModel(Comment.name) private commentModel: Model<Comment>,
     private postService: PostService,
     private profileService: ProfileService
-    ){}
+  ) {}
 
   async createComment(createCommentDto: CreateCommentDto) {
-    try{
+    try {
       const newComment = new this.commentModel(createCommentDto);
       
-      // update the post
+      // Update the post
       const reqPost = await this.postService.findOne(createCommentDto.postId);
-      if (reqPost != null) {
-        var postComments = reqPost.comments;
-        postComments.push(newComment.id.toString());
-        const updatedPost = await this.postService.updatePost(createCommentDto.postId, { comments: postComments });
+      if (reqPost) {
+        reqPost.comments.push(newComment._id.toString());
+        await this.postService.updatePost(createCommentDto.postId, { comments: reqPost.comments });
       }
 
-      
-      // update the profile
+      // Update the profile
       const reqProfile = await this.profileService.findOne(createCommentDto.author);
-      if (reqProfile != null) {
-        var profileComments = reqProfile.comments;
-        profileComments.push(newComment.id.toString());
-        const updatedProfile = await this.profileService.updateProfile(createCommentDto.author, { comments: profileComments});
+      if (reqProfile) {
+        reqProfile.comments.push(newComment._id.toString());
+        await this.profileService.updateProfile(createCommentDto.author, { comments: reqProfile.comments });
       }
 
       return await newComment.save();
-
-    } catch(error) { 
-      // return new HttpException(error.message, HttpStatus.BAD_REQUEST);
-      throw new Error(`Couldn't create comment: ${error.message}`)
-
+    } catch (error) {
+      throw new HttpException(`Couldn't create comment: ${error.message}`, HttpStatus.BAD_REQUEST);
     }
   }
 
   async findCommentByPost(id: string) {
-    try{
-      const filter = {postId: id};
-      const postComments = await this.commentModel.find(filter);
-      return postComments;
-
-    } catch(error) {
-      throw new Error(`Couldn't find comment: ${error.message}`)
-
+    try {
+      return await this.commentModel.find({ postId: id });
+    } catch (error) {
+      throw new HttpException(`Couldn't find comment: ${error.message}`, HttpStatus.BAD_REQUEST);
     }
   }
 
   async findAll() {
     try {
-      const comments = await this.commentModel.find();
-      return comments;
+      return await this.commentModel.find();
     } catch (error) {
-      throw new Error (`Couldn't find comments: ${error.message}`)
+      throw new HttpException(`Couldn't find comments: ${error.message}`, HttpStatus.BAD_REQUEST);
     }
   }
 
   async findCommentByAuthor(id: string) {
-    try{
-      const filter = {author: id};
-      const userComments = await this.commentModel.find(filter);
-      return userComments;
-
-    } catch(error) {
-      throw new Error(`Couldn't find comment: ${error.message}`)
-
+    try {
+      return await this.commentModel.find({ author: id });
+    } catch (error) {
+      throw new HttpException(`Couldn't find comment: ${error.message}`, HttpStatus.BAD_REQUEST);
     }
   }
 
   async updateComment(id: string, updateCommentDto: CreateCommentDto) {
-    try{
-      const filter = {_id: id};
-      const updatedComment = await this.commentModel.findByIdAndUpdate(filter, updateCommentDto, {new: true}).exec();
-      return updatedComment;
-    } catch(error) {
-      throw new Error(`Couldn't update comment: ${error.message}`);
+    try {
+      return await this.commentModel.findByIdAndUpdate(id, updateCommentDto, { new: true }).exec();
+    } catch (error) {
+      throw new HttpException(`Couldn't update comment: ${error.message}`, HttpStatus.BAD_REQUEST);
     }
   }
 
   async removeComment(id: string) {
-    const filter = {_id: id};
-    try{
-      const deletedComment = await this.commentModel.findByIdAndDelete(filter, { new: true });
-
-      // update the post
-      const reqPost = await this.postService.findOne(deletedComment.postId);
-      var postComments = reqPost.comments;
-      var index = postComments.indexOf(deletedComment._id.toString());
-      if (index !== -1) {
-        postComments.splice(index, 1);
+    try {
+      const deletedComment = await this.commentModel.findByIdAndDelete(id);
+      if (!deletedComment) {
+        throw new HttpException("Comment not found", HttpStatus.NOT_FOUND);
       }
-      const updatedPost = await this.postService.updatePost(deletedComment.postId, { comments: postComments });
-
-      // update the profile
-      const reqProfile = await this.profileService.findOne(deletedComment.author);
-      var profileComments = reqProfile.comments;
-      var index = profileComments.indexOf(deletedComment._id.toString());
-      if (index !== -1) {
-        profileComments.splice(index, 1);
-      }
-      const updatedProfile = this.profileService.updateProfile(deletedComment.author, { comments: profileComments});
       
-  } catch(error) {
-    throw new Error(`Couldn't delete comment: ${error.message}`);
+      // Update the post
+      const reqPost = await this.postService.findOne(deletedComment.postId);
+      if (reqPost) {
+        reqPost.comments = reqPost.comments.filter(commentId => commentId !== deletedComment._id.toString());
+        await this.postService.updatePost(deletedComment.postId, { comments: reqPost.comments });
+      }
+
+      // Update the profile
+      const reqProfile = await this.profileService.findOne(deletedComment.author);
+      if (reqProfile) {
+        reqProfile.comments = reqProfile.comments.filter(commentId => commentId !== deletedComment._id.toString());
+        await this.profileService.updateProfile(deletedComment.author, { comments: reqProfile.comments });
+      }
+
+      return deletedComment;
+    } catch (error) {
+      throw new HttpException(`Couldn't delete comment: ${error.message}`, HttpStatus.BAD_REQUEST);
+    }
   }
-}
 }
