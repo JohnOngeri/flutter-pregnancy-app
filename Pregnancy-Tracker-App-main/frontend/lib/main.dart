@@ -104,18 +104,22 @@ class App extends StatelessWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: 'Pregnancy Tracker',
-      theme: LightTheme().getThemeData,
-      routerConfig: router,
-      builder: (context, child) {
-        return GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: child,
-        );
-      },
-    );
-  }
+Widget build(BuildContext context) {
+  return MaterialApp.router(
+    debugShowCheckedModeBanner: false,
+    title: 'Pregnancy Tracker',
+    theme: LightTheme().getThemeData,
+    routerConfig: router,
+    builder: (context, child) {
+      return GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(  // Ensure Scaffold wraps everything
+          body: Material( // Ensure Material is present for InkWell and other widgets
+            child: child ?? SizedBox(), // Prevent null child issues
+          ),
+        ),
+      );
+    },
+  );
+}
 }

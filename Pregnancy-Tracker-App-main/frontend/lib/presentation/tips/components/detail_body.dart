@@ -42,7 +42,7 @@ class _DetailBodyState extends State<DetailBody> {
                 child: Row(
                   children: [
                     const CircleAvatar(
-                      backgroundImage: AssetImage('images/doctor.png'),
+                      backgroundImage: AssetImage('assets/images/doctor.png'),
                     ),
                     const SizedBox(width: 10),
                     Column(
@@ -125,15 +125,15 @@ class _DetailBodyState extends State<DetailBody> {
   String _getYoutubeVideoId(String type) {
     switch (type) {
       case "Food Tips":
-        return "https://www.youtube.com/watch?v=ADqM3thoy2Y";
+        return "ADqM3thoy2Y"; // Extracted video ID
       case "Health Tips":
-        return "https://youtu.be/Ybyo5nRmr1Y?si=NUcp8k4PVgpob0Mf";
+        return "Ybyo5nRmr1Y";
       case "Psychological Tips":
-        return "https://youtu.be/MwvctN3Uejg?si=B-pOm2SKzI8JJm-k";
+        return "MwvctN3Uejg";
       case "Fitness Tips":
-        return "https://youtu.be/lKx0sOz31C4?si=q535Jg3ycE9ot8Z8";
+        return "lKx0sOz31C4";
       default:
-        return "https://youtu.be/BcVOmKUhxnQ?si=GglxPpESIARty0En";
+        return "BcVOmKUhxnQ";
     }
   }
 
