@@ -75,12 +75,7 @@ flutter:
     - assets/background.jpg
     - assets/images/
     - assets/icons/
-    - assets/images/food_tips.jpg
-    - assets/images/health_tips.jpg
-    - assets/images/psychological_tips.jpg
-    - assets/images/fitness_tips.jpg
-    - assets/images/doctor.png
-
+     
 flutter_assets:
   assets_path: assets/
   output_path: lib/core/constants/

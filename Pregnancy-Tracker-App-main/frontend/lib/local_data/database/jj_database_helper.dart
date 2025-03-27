@@ -376,19 +376,32 @@ Future<List<AppointmentDomain>> updateAndRefreshAppointments(
   }
 
   // add requests
-  Future<void> addAppointments(List<AppointmentDto> appointmentDtoList) async {
-    final Database db = await database;
-    await db.transaction((transac) async {
-      final batch = transac.batch();
+ Future<void> addAppointments(List<AppointmentDto> appointmentDtoList) async {
+  final Database db = await database;
+  await db.transaction((transac) async {
+    final batch = transac.batch();
 
-      for (AppointmentDto appointmentDto in appointmentDtoList) {
-        batch.insert(
-            "appointment", appointmentDto.toAppointmentEntity().toJson(),
-            conflictAlgorithm: ConflictAlgorithm.replace);
+    for (AppointmentDto appointmentDto in appointmentDtoList) {
+      try {
+        final appointmentEntity = appointmentDto.toAppointmentEntity();
+        if (appointmentEntity != null) {
+          batch.insert(
+            "appointment",
+            appointmentEntity.toJson(),
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        } else {
+          print("Warning: appointmentDto.toAppointmentEntity() returned null for ${appointmentDto.id}");
+        }
+      } catch (e, stacktrace) {
+        print("Error converting appointmentDto to entity: $e");
+        print(stacktrace);
       }
-      await batch.commit(noResult: true);
-    });
-  }
+    }
+    await batch.commit(noResult: true);
+  });
+}
+
 
   Future<void> addComments(List<CommentDto> commentDtoList) async {
     final Database db = await database;
@@ -403,18 +416,28 @@ Future<List<AppointmentDomain>> updateAndRefreshAppointments(
     });
   }
 
-  Future<void> addNotes(List<NoteDto> noteDtoList) async {
-    final Database db = await database;
-    await db.transaction((transac) async {
-      final batch = transac.batch();
+ Future<void> addNotes(List<NoteDto> noteDtoList) async {
+  final Database db = await database;
+  await db.transaction((transac) async {
+    final batch = transac.batch();
 
-      for (NoteDto noteDto in noteDtoList) {
-        batch.insert("note", noteDto.toNoteEntity().toJson(),
-            conflictAlgorithm: ConflictAlgorithm.replace);
+    for (NoteDto noteDto in noteDtoList) {
+      try {
+        final noteEntity = noteDto.toNoteEntity();
+        if (noteEntity != null) {
+          batch.insert("note", noteEntity.toJson(),
+              conflictAlgorithm: ConflictAlgorithm.replace);
+        } else {
+          print("Warning: noteDto.toNoteEntity() returned null for ${noteDto.id}");
+        }
+      } catch (e, stacktrace) {
+        print("Error converting noteDto to entity: $e");
+        print(stacktrace);
       }
-      await batch.commit(noResult: true);
-    });
-  }
+    }
+    await batch.commit(noResult: true);
+  });
+}
 
   Future<void> addPosts(List<PostDto> postDtoList) async {
     final Database db = await database;

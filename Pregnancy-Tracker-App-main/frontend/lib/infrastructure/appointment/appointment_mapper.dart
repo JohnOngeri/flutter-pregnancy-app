@@ -15,15 +15,17 @@ extension ADMapper on AppointmentDto {
   }
 
   AppointmentEntity toAppointmentEntity() {
-    return AppointmentEntity(
-      id: id!,
-      title: title,
-      body: body,
-      date: date,
-      time: time,
-      author: author,
-    );
-  }
+  return AppointmentEntity(
+    id: id ?? '', // Provide a default empty string instead of `id!`
+    title: title,
+    body: body,
+    date: date,
+    time: time,
+    author: author,
+  );
+}
+
+
 
   AppointmentDomain fromDto(AppointmentDto appointment) {
     return AppointmentDomain(

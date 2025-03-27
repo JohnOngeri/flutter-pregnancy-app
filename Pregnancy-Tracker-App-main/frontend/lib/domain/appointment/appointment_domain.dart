@@ -18,15 +18,16 @@ class AppointmentDomain {
   });
 
   factory AppointmentDomain.fromJson(Map<String, dynamic> json) {
-    return AppointmentDomain(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      body: json['body'] as String,
-      date: json['date'] as String,
-      time: json['time'] as String,
-      author: json['author'] as String,
-    );
-  }
+  return AppointmentDomain(
+    id: json['id']?.toString(),  // Convert to string safely
+    title: json['title'] ?? 'Untitled', 
+    body: json['body'] ?? '',
+    date: json['date'] ?? '',
+    time: json['time'] ?? '',
+    author: json['author'] ?? 'Unknown',
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {

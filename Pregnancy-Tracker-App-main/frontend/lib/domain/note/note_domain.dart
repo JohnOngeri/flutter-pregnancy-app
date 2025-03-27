@@ -13,14 +13,15 @@ class NoteDomain {
     required this.author,
   });
 
-  factory NoteDomain.fromJson(Map<String, dynamic> json) {
-    return NoteDomain(
-      id: json['id'] as String,
-      body: json['body'] as String,
-      title: json['title'] as String,
-      author: json['author'] as String,
-    );
-  }
+ factory NoteDomain.fromJson(Map<String, dynamic> json) {
+  return NoteDomain(
+    id: json['id']?.toString(),  // Converts `null` safely to a String
+    body: json['body'] ?? '',     // Provides default empty string
+    title: json['title'] ?? 'Untitled',
+    author: json['author'] ?? 'Unknown',
+  );
+}
+
 
   @override
   String toString() {
