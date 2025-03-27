@@ -80,7 +80,12 @@ export class CommentsService {
       // Update the post
       const reqPost = await this.postService.findOne(deletedComment.postId);
       if (reqPost) {
-        reqPost.comments = reqPost.comments.filter(commentId => commentId !== deletedComment._id.toString());
+        const filteredComments = reqPost.comments.filter(commentId => commentId !== deletedComment._id.toString());
+        if (filteredComments.length === 1) {
+          reqPost.comments = [filteredComments[0]];
+        } else {
+          throw new HttpException("Post must have exactly one comment", HttpStatus.BAD_REQUEST);
+        }
         await this.postService.updatePost(deletedComment.postId, { comments: reqPost.comments });
       }
 
