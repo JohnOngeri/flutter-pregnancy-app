@@ -3,7 +3,8 @@ import { NotesController } from './notes.controller';
 import { NotesService } from './notes.service';
 
 describe('NotesController', () => {
-  let controller: NotesController;
+  let notesController: NotesController;
+  let notesService: NotesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -11,10 +12,11 @@ describe('NotesController', () => {
       providers: [NotesService],
     }).compile();
 
-    controller = module.get<NotesController>(NotesController);
+    notesController = module.get<NotesController>(NotesController);
+    notesService = module.get<NotesService>(NotesService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(notesController).toBeDefined();
   });
 });
