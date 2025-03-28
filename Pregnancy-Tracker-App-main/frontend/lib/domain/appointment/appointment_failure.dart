@@ -16,11 +16,9 @@ class AppointmentFailure {
 
   @override
   String toString() {
-    if (this is ValidationError || this is CustomError) {
-      return (this as dynamic).message;
-    } else {
-      return 'Unknown error';
-    }
+    return this is ValidationError || this is CustomError
+        ? (this as dynamic).message
+        : 'Unknown error';
   }
 }
 
@@ -28,90 +26,70 @@ class ServerError extends AppointmentFailure {
   const ServerError() : super._();
 
   @override
-  String toString() {
-    return 'ServerError: Server error occurred';
-  }
+  String toString() => 'ServerError: Server error occurred';
 }
 
 class NetworkError extends AppointmentFailure {
   const NetworkError() : super._();
 
   @override
-  String toString() {
-    return 'NetworkError: Network error occurred';
-  }
+  String toString() => 'NetworkError: Network error occurred';
 }
 
 class Unauthorized extends AppointmentFailure {
   const Unauthorized() : super._();
 
   @override
-  String toString() {
-    return 'Unauthorized: Unauthorized access';
-  }
+  String toString() => 'Unauthorized: Unauthorized access';
 }
 
 class NotFound extends AppointmentFailure {
   const NotFound() : super._();
 
   @override
-  String toString() {
-    return 'NotFound: Resource not found';
-  }
+  String toString() => 'NotFound: Resource not found';
 }
 
 class PermissionDenied extends AppointmentFailure {
   const PermissionDenied() : super._();
 
   @override
-  String toString() {
-    return 'PermissionDenied: Permission denied';
-  }
+  String toString() => 'PermissionDenied: Permission denied';
 }
 
 class Forbidden extends AppointmentFailure {
   const Forbidden() : super._();
 
   @override
-  String toString() {
-    return 'Forbidden: Forbidden access';
-  }
+  String toString() => 'Forbidden: Forbidden access';
 }
 
 class EmptyTitleError extends AppointmentFailure {
   const EmptyTitleError() : super._();
 
   @override
-  String toString() {
-    return 'EmptyTitleError: Title cannot be empty';
-  }
+  String toString() => 'EmptyTitleError: Title cannot be empty';
 }
 
 class EmptyDescriptionError extends AppointmentFailure {
   const EmptyDescriptionError() : super._();
 
   @override
-  String toString() {
-    return 'EmptyDescriptionError: Description cannot be empty';
-  }
+  String toString() => 'EmptyDescriptionError: Description cannot be empty';
 }
 
 class EmptyDateError extends AppointmentFailure {
   const EmptyDateError() : super._();
 
   @override
-  String toString() {
-    return 'EmptyDateError: Date cannot be empty';
-  }
+  String toString() => 'EmptyDateError: Date cannot be empty';
 }
 
 class EmptyTimeError extends AppointmentFailure {
   const EmptyTimeError() : super._();
 
   @override
-  String toString() {
-    return 'EmptyTimeError: Time cannot be empty';
-  }
+  String toString() => 'EmptyTimeError: Time cannot be empty';
 }
 
 class ValidationError extends AppointmentFailure {
@@ -120,9 +98,7 @@ class ValidationError extends AppointmentFailure {
   const ValidationError(this.message) : super._();
 
   @override
-  String toString() {
-    return 'ValidationError: $message';
-  }
+  String toString() => 'ValidationError: $message';
 }
 
 class CustomError extends AppointmentFailure {
@@ -131,7 +107,5 @@ class CustomError extends AppointmentFailure {
   const CustomError(this.message) : super._();
 
   @override
-  String toString() {
-    return 'CustomError: $message';
-  }
+  String toString() => 'CustomError: $message';
 }
