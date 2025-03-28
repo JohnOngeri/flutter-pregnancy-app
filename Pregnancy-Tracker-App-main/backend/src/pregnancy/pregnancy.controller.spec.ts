@@ -5,14 +5,21 @@ describe('PregnancyController', () => {
   let controller: PregnancyController;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    // Create a testing module instance for PregnancyController
+    const testingModule: TestingModule = await Test.createTestingModule({
       controllers: [PregnancyController],
     }).compile();
 
-    controller = module.get<PregnancyController>(PregnancyController);
+    // Retrieve the controller instance from the module
+    controller = testingModule.get<PregnancyController>(PregnancyController);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    const isControllerAvailable = controller !== undefined && controller !== null;
+    expect(isControllerAvailable).toBe(true);
+  });
+
+  it('should have a valid instance', () => {
+    expect(controller).toBeInstanceOf(PregnancyController);
   });
 });
