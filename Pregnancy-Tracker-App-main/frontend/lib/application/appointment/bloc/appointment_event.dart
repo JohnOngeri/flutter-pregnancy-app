@@ -1,13 +1,17 @@
 import 'package:frontend/domain/appointment/appointment.dart';
 
-class AppointmentEvent {
+abstract class AppointmentEvent {
   const AppointmentEvent._();
 
-  const factory AppointmentEvent.add(AppointmentForm appointmentForm) = AppointmentEventAdd;
-  const factory AppointmentEvent.update(AppointmentForm appointmentForm, String appointmentId) =
+  const factory AppointmentEvent.add(AppointmentForm appointmentForm) =
+      AppointmentEventAdd;
+  const factory AppointmentEvent.update(
+          AppointmentForm appointmentForm, String appointmentId) =
       AppointmentEventUpdate;
-  const factory AppointmentEvent.delete(String appointmentId) = AppointmentEventDelete;
-  const factory AppointmentEvent.getByUser(String userId) = AppointmentEventGetByUser;
+  const factory AppointmentEvent.delete(String appointmentId) =
+      AppointmentEventDelete;
+  const factory AppointmentEvent.getByUser(String userId) =
+      AppointmentEventGetByUser;
 }
 
 class AppointmentEventAdd extends AppointmentEvent {
@@ -20,7 +24,8 @@ class AppointmentEventUpdate extends AppointmentEvent {
   final AppointmentForm appointmentForm;
   final String appointmentId;
 
-  const AppointmentEventUpdate(this.appointmentForm, this.appointmentId) : super._();
+  const AppointmentEventUpdate(this.appointmentForm, this.appointmentId)
+      : super._();
 }
 
 class AppointmentEventDelete extends AppointmentEvent {
