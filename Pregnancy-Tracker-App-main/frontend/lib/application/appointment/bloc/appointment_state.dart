@@ -51,7 +51,7 @@ class AppointmentStateSuccessMultiple extends AppointmentState {
           appointments == other.appointments);
 
   @override
-  int get hashCode => runtimeType.hashCode ^ appointments.hashCode;
+  int get hashCode => Object.hash(runtimeType, appointments);
 }
 
 class AppointmentStateFailure extends AppointmentState {
@@ -67,7 +67,7 @@ class AppointmentStateFailure extends AppointmentState {
           failure == other.failure);
 
   @override
-  int get hashCode => runtimeType.hashCode ^ failure.hashCode;
+  int get hashCode => Object.hash(runtimeType, failure);
 }
 
 class AppointmentStateSuccess extends AppointmentState {
@@ -83,7 +83,7 @@ class AppointmentStateSuccess extends AppointmentState {
           appointment == other.appointment);
 
   @override
-  int get hashCode => runtimeType.hashCode ^ appointment.hashCode;
+  int get hashCode => Object.hash(runtimeType, appointment);
 }
 
 class AppointmentStateDeleted extends AppointmentState {
