@@ -26,7 +26,7 @@ class MockProfileBloc extends MockBloc<ProfileEvent, ProfileState>
     implements ProfileBloc {}
 
 void main() {
-  group('ProfilePage widget test', () {
+  group('ProfilePage Widget Tests', () {
     late MockPostListBloc postListBloc;
     late MockCommentBloc commentBloc;
     late MockProfileBloc profileBloc;
@@ -37,7 +37,8 @@ void main() {
       profileBloc = MockProfileBloc();
     });
 
-    testWidgets('renders ProfilePage correctly', (WidgetTester tester) async {
+    // Helper function to pump the ProfilePage widget with BlocProviders
+    Future<void> pumpProfilePage(WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MultiBlocProvider(
@@ -50,6 +51,10 @@ void main() {
           ),
         ),
       );
+    }
+
+    testWidgets('renders ProfilePage correctly', (WidgetTester tester) async {
+      await pumpProfilePage(tester);
 
       // Verify the presence of the SliverAppBar
       expect(find.byType(SliverAppBar), findsOneWidget);
@@ -70,64 +75,31 @@ void main() {
       expect(find.byType(Linkcard), findsNWidgets(4));
     });
 
-    testWidgets('displays loading indicators when loading posts',
+    testWidgets('displays loading indicator when loading posts',
         (WidgetTester tester) async {
       whenListen(postListBloc, Stream.value(PostListStateLoading()));
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider<PostListBloc>.value(value: postListBloc),
-              BlocProvider<CommentBloc>.value(value: commentBloc),
-              BlocProvider<ProfileBloc>.value(value: profileBloc),
-            ],
-            child: ProfilePage(),
-          ),
-        ),
-      );
+      await pumpProfilePage(tester);
 
       // Verify the presence of the CircularProgressIndicator
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('displays loading indicators when loading comments',
+    testWidgets('displays loading indicator when loading comments',
         (WidgetTester tester) async {
       whenListen(commentBloc, Stream.value(CommentStateLoading()));
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider<PostListBloc>.value(value: postListBloc),
-              BlocProvider<CommentBloc>.value(value: commentBloc),
-              BlocProvider<ProfileBloc>.value(value: profileBloc),
-            ],
-            child: ProfilePage(),
-          ),
-        ),
-      );
+      await pumpProfilePage(tester);
 
       // Verify the presence of the CircularProgressIndicator
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('displays loading indicators when loading profile',
+    testWidgets('displays loading indicator when loading profile',
         (WidgetTester tester) async {
       whenListen(profileBloc, Stream.value(ProfileStateLoading()));
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider<PostListBloc>.value(value: postListBloc),
-              BlocProvider<CommentBloc>.value(value: commentBloc),
-              BlocProvider<ProfileBloc>.value(value: profileBloc),
-            ],
-            child: ProfilePage(),
-          ),
-        ),
-      );
+      await pumpProfilePage(tester);
 
       // Verify the presence of the CircularProgressIndicator
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
