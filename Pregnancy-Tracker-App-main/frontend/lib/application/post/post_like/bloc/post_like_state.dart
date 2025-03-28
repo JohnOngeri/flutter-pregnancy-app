@@ -20,9 +20,9 @@ class PostLikeStateSuccess extends PostLikeState {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PostLikeStateSuccess &&
+      (other is PostLikeStateSuccess &&
           runtimeType == other.runtimeType &&
-          post == other.post;
+          post == other.post);
 
   @override
   int get hashCode => runtimeType.hashCode ^ post.hashCode;
@@ -40,9 +40,9 @@ class PostLikeStateFailure extends PostLikeState {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PostLikeStateFailure &&
+      (other is PostLikeStateFailure &&
           runtimeType == other.runtimeType &&
-          postFailure == other.postFailure;
+          postFailure == other.postFailure);
 
   @override
   int get hashCode => runtimeType.hashCode ^ postFailure.hashCode;
