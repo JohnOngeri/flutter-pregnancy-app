@@ -10,16 +10,41 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   NoteBloc({required this.noteRepositoryInterface})
       : super(const NoteStateInitial()) {
-    on<NoteEventAdd>((event, emit) async {
-      emit(const NoteStateLoading());
+  on<NoteEventAdd>((event, emit) async {
+  emit(const NoteStateLoading());
 
-      Either<NoteFailure, NoteDomain> result =
-          await noteRepositoryInterface.addNote(event.noteForm);
+  Either<NoteFailure, NoteDomain> result =
+      await noteRepositoryInterface.addNote(event.noteForm);
 
-      print('result bloc is $result');
-      result.fold(
-          (l) => emit(NoteStateFailure(l)), (r) => emit(NoteStateSuccess(r)));
-    });
+  print('Result bloc is $result');
+
+  await result.fold(
+    (failure) async {
+      print('Failed to add note: $failure');
+      emit(NoteStateFailure(failure));
+    },
+    (note) async {
+      print('Fetching updated notes after adding a new note...');
+      
+      // Fetch updated notes
+      Either<NoteFailure, List<NoteDomain>> fetchResult =
+          await noteRepositoryInterface.getNotesForUser(note.author);
+
+      await fetchResult.fold(
+        (failure) async {
+          print('Failed to fetch updated notes: $failure');
+          emit(NoteStateFailure(failure));
+        },
+        (notes) async {
+          print('Updated notes fetched successfully.');
+          emit(NoteStateSuccessMultiple(notes));
+        },
+      );
+    },
+  );
+});
+
+
 
     on<NoteEventUpdate>((event, emit) async {
       emit(const NoteStateLoading());
