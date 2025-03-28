@@ -14,49 +14,77 @@ class MockAppointmentRepositoryInterface extends Mock
 void main() {
   group('Integration Test', () {
     late AppointmentBloc appointmentBloc;
+    late AppointmentRepositoryInterface appointmentRepository;
 
     setUp(() {
-      final appointmentRepository = MockAppointmentRepositoryInterface();
+      appointmentRepository = MockAppointmentRepositoryInterface();
       appointmentBloc = AppointmentBloc(
-          appointmentRepositoryInterface:
-              appointmentRepository); // Initialize the AppointmentBloc
+          appointmentRepositoryInterface: appointmentRepository);
     });
 
     testWidgets('AddAppointmentPage integration test',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        // Provide the AddAppointmentPage with the required dependencies
         MaterialApp(
           home: AddAppointmentPage(),
         ),
       );
 
-      // Perform the necessary actions (e.g., enter information, submit form)
-      // Use tester to interact with the UI elements and trigger actions
+      // Find the form fields for entering appointment details
+      final titleField = find.byKey(Key('appointmentTitleField'));
+      final bodyField = find.byKey(Key('appointmentBodyField'));
+      final dateField = find.byKey(Key('appointmentDateField'));
+      final timeField = find.byKey(Key('appointmentTimeField'));
+      final saveButton = find.byKey(Key('saveAppointmentButton'));
 
-      // Verify the expected behavior or outcome
-      // Use tester and expectations to validate the UI elements or perform assertions
+      // Ensure the fields are present
+      expect(titleField, findsOneWidget);
+      expect(bodyField, findsOneWidget);
+      expect(dateField, findsOneWidget);
+      expect(timeField, findsOneWidget);
+      expect(saveButton, findsOneWidget);
+
+      // Simulate user input
+      await tester.enterText(titleField, 'New Appointment');
+      await tester.enterText(bodyField, 'Appointment Details');
+      await tester.enterText(dateField, '2023-06-02');
+      await tester.enterText(timeField, '14:30');
+      await tester.tap(saveButton);
+
+      // Trigger a frame to ensure all changes are applied
+      await tester.pumpAndSettle();
+
+      // Verify that the appointment was saved, which might trigger a navigation or a success message
+      expect(find.text('Appointment saved successfully!'),
+          findsOneWidget); // Replace with expected behavior
     });
 
     testWidgets('AppointmentsPage integration test',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        // Provide the AppointmentsPage with the required dependencies
         MaterialApp(
           home: AppointmentsPage(),
         ),
       );
 
-      // Perform the necessary actions (e.g., interact with the UI elements)
-      // Use tester to interact with the UI elements and trigger actions
+      // Ensure the app displays the appointment list and necessary buttons
+      final appointmentList = find.byType(ListView);
+      final addAppointmentButton = find.byIcon(Icons.add);
 
-      // Verify the expected behavior or outcome
-      // Use tester and expectations to validate the UI elements or perform assertions
+      // Verify that the appointment list is present
+      expect(appointmentList, findsOneWidget);
+      expect(addAppointmentButton, findsOneWidget);
+
+      // Simulate user clicking on the "Add Appointment" button
+      await tester.tap(addAppointmentButton);
+      await tester.pumpAndSettle();
+
+      // Verify that it navigates to the AddAppointmentPage
+      expect(find.byType(AddAppointmentPage), findsOneWidget);
     });
 
     testWidgets('EditAppointmentDialog integration test',
         (WidgetTester tester) async {
-      // Create an appointment for testing
       final appointmentId = 'testAppointmentId';
       final initialTitle = 'Initial Title';
       final initialBody = 'Initial Body';
@@ -64,7 +92,6 @@ void main() {
       final initialTime = '14:30';
 
       await tester.pumpWidget(
-        // Provide the EditAppointmentDialog with the required dependencies
         MaterialApp(
           home: EditAppointmentDialog(
             initialTitle: initialTitle,
@@ -76,17 +103,38 @@ void main() {
         ),
       );
 
-      // Perform the necessary actions (e.g., modify information, update/delete appointment)
-      // Use tester to interact with the UI elements and trigger actions
+      // Find and interact with the fields to update appointment details
+      final titleField = find.byKey(Key('editAppointmentTitleField'));
+      final bodyField = find.byKey(Key('editAppointmentBodyField'));
+      final dateField = find.byKey(Key('editAppointmentDateField'));
+      final timeField = find.byKey(Key('editAppointmentTimeField'));
+      final saveButton = find.byKey(Key('saveEditedAppointmentButton'));
 
-      // Verify the expected behavior or outcome
-      // Use tester and expectations to validate the UI elements or perform assertions
+      // Ensure the fields are present
+      expect(titleField, findsOneWidget);
+      expect(bodyField, findsOneWidget);
+      expect(dateField, findsOneWidget);
+      expect(timeField, findsOneWidget);
+      expect(saveButton, findsOneWidget);
+
+      // Modify the appointment details and save
+      await tester.enterText(titleField, 'Updated Title');
+      await tester.enterText(bodyField, 'Updated Body');
+      await tester.enterText(dateField, '2023-06-03');
+      await tester.enterText(timeField, '15:00');
+      await tester.tap(saveButton);
+
+      // Trigger a frame to apply changes
+      await tester.pumpAndSettle();
+
+      // Verify that the appointment was updated, which might trigger a success message or navigation
+      expect(find.text('Appointment updated successfully!'),
+          findsOneWidget); // Replace with expected behavior
     });
 
     testWidgets('AppointmentsBody integration test',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        // Provide the AppointmentsBody with the required dependencies
         MaterialApp(
           home: Scaffold(
             body: AppointmentsBody(),
@@ -94,11 +142,16 @@ void main() {
         ),
       );
 
-      // Perform the necessary actions (e.g., interact with the UI elements)
-      // Use tester to interact with the UI elements and trigger actions
+      // Verify that the body displays the correct information, like appointment list
+      final appointmentList = find.byType(ListView);
 
-      // Verify the expected behavior or outcome
-      // Use tester and expectations to validate the UI elements or perform assertions
+      // Ensure the list is present
+      expect(appointmentList, findsOneWidget);
+
+      // Verify that each appointment item is rendered correctly (e.g., by title)
+      // You can mock the list of appointments and check for specific text
+      expect(find.text('Test Appointment'),
+          findsOneWidget); // Replace with actual mock data
     });
   });
 }
