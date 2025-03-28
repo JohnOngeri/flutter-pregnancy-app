@@ -44,8 +44,8 @@ void main() {
         child: MyApp(
           noteBloc: noteBloc,
           appointmentBloc: appointmentBloc,
-          postBloc: postBloc, 
-          commentBloc: commentBloc, 
+          postBloc: postBloc,
+          commentBloc: commentBloc,
           profileBloc: profileBloc,
         ),
       ),

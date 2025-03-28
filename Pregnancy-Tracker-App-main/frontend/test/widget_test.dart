@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -39,3 +41,10 @@ void main() {
     expect(find.byType(Scaffold), findsAtLeastNWidgets(1));
   });
 }
+
+MyApp(
+    {required MockNoteBloc noteBloc,
+    required MockPostListBloc postListBloc,
+    required MockProfileBloc profileBloc,
+    required MockAppointmentBloc appointmentBloc,
+    required MockCommentBloc commentBloc}) {}

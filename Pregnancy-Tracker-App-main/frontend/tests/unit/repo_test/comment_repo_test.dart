@@ -27,7 +27,9 @@ void main() {
   });
 
   group('getCommentsForPost', () {
-    test('should return Right with a list of CommentDomain on successful API call', () async {
+    test(
+        'should return Right with a list of CommentDomain on successful API call',
+        () async {
       // Arrange
       final postId = '123';
       final commentsDto = [
@@ -44,7 +46,8 @@ void main() {
           // ...
         ),
       ];
-      final commentsDomain = commentsDto.map((e) => CommentDomain.fromJson(e.toJson())).toList();
+      final commentsDomain =
+          commentsDto.map((e) => CommentDomain.fromJson(e.toJson())).toList();
       final expectedResult = Right(commentsDomain);
 
       when(mockCommentApi.getCommentsByPost(postId))
@@ -57,7 +60,9 @@ void main() {
       expect(result, expectedResult);
     });
 
-    test('should return Right with a list of CommentDomain from local database when API call times out', () async {
+    test(
+        'should return Right with a list of CommentDomain from local database when API call times out',
+        () async {
       // Arrange
       final postId = '123';
       final commentsDto = [
@@ -74,10 +79,12 @@ void main() {
           // ...
         ),
       ];
-      final commentsDomain = commentsDto.map((e) => CommentDomain.fromJson(e.toJson())).toList();
+      final commentsDomain =
+          commentsDto.map((e) => CommentDomain.fromJson(e.toJson())).toList();
       final expectedResult = Right(commentsDomain);
 
-      when(mockCommentApi.getCommentsByPost(postId)).thenThrow(JJTimeoutException());
+      when(mockCommentApi.getCommentsByPost(postId))
+          .thenThrow(JJTimeoutException());
       when(mockDatabaseHelper.getCommentsByPost(postId))
           .thenAnswer((_) async => commentsDomain);
 
@@ -88,13 +95,16 @@ void main() {
       expect(result, expectedResult);
     });
 
-    test('should return Left with CommentFailure.serverError() when API call and local database retrieval fail', () async {
+    test(
+        'should return Left with CommentFailure.serverError() when API call and local database retrieval fail',
+        () async {
       // Arrange
       final postId = '123';
       final expectedResult = Left(CommentFailure.serverError());
 
       when(mockCommentApi.getCommentsByPost(postId)).thenThrow(Exception());
-      when(mockDatabaseHelper.getCommentsByPost(postId)).thenAnswer((_) async => []);
+      when(mockDatabaseHelper.getCommentsByPost(postId))
+          .thenAnswer((_) async => []);
 
       // Act
       final result = await repository.getCommentsForPost(postId);
@@ -105,7 +115,6 @@ void main() {
   });
 
   // Add more test cases for other methods if needed
-
 }
 
 class MockDatabaseHelper extends Mock implements DatabaseHelper {}
