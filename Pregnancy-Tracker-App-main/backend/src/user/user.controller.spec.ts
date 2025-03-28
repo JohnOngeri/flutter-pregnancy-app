@@ -3,18 +3,18 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
 describe('UserController', () => {
-  let controller: UserController;
+  let userController: UserController; // Changed variable name for consistency
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const testingModule: TestingModule = await Test.createTestingModule({ // Renamed to make the name more consistent
       controllers: [UserController],
       providers: [UserService],
     }).compile();
 
-    controller = module.get<UserController>(UserController);
+    userController = testingModule.get<UserController>(UserController); // Updated the variable name
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(userController).toBeDefined(); // Used the updated variable name
   });
 });
