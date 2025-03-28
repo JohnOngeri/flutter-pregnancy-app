@@ -1,19 +1,16 @@
 import 'package:frontend/domain/appointment/appointment.dart';
 
-class AppointmentState {
+abstract class AppointmentState {
   const AppointmentState._();
 
   const factory AppointmentState.initial() = AppointmentStateInitial;
-
   const factory AppointmentState.loading() = AppointmentStateLoading;
-
-  const factory AppointmentState.successMultiple(List<AppointmentDomain> appointments) =
-      AppointmentStateSuccessMultiple;
-
-  const factory AppointmentState.failure(AppointmentFailure failure) = AppointmentStateFailure;
-
-  const factory AppointmentState.success(AppointmentDomain appointment) = AppointmentStateSuccess;
-
+  const factory AppointmentState.successMultiple(
+      List<AppointmentDomain> appointments) = AppointmentStateSuccessMultiple;
+  const factory AppointmentState.failure(AppointmentFailure failure) =
+      AppointmentStateFailure;
+  const factory AppointmentState.success(AppointmentDomain appointment) =
+      AppointmentStateSuccess;
   const factory AppointmentState.deleted() = AppointmentStateDeleted;
 
   AppointmentState copyWith({
@@ -49,9 +46,9 @@ class AppointmentStateSuccessMultiple extends AppointmentState {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AppointmentStateSuccessMultiple &&
+      (other is AppointmentStateSuccessMultiple &&
           runtimeType == other.runtimeType &&
-          appointments == other.appointments;
+          appointments == other.appointments);
 
   @override
   int get hashCode => runtimeType.hashCode ^ appointments.hashCode;
@@ -65,9 +62,9 @@ class AppointmentStateFailure extends AppointmentState {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AppointmentStateFailure &&
+      (other is AppointmentStateFailure &&
           runtimeType == other.runtimeType &&
-          failure == other.failure;
+          failure == other.failure);
 
   @override
   int get hashCode => runtimeType.hashCode ^ failure.hashCode;
@@ -81,9 +78,9 @@ class AppointmentStateSuccess extends AppointmentState {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AppointmentStateSuccess &&
+      (other is AppointmentStateSuccess &&
           runtimeType == other.runtimeType &&
-          appointment == other.appointment;
+          appointment == other.appointment);
 
   @override
   int get hashCode => runtimeType.hashCode ^ appointment.hashCode;
