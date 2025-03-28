@@ -7,11 +7,11 @@ describe('AppController', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
+      controllers: [AppController],  // Importing the AppController
+      providers: [AppService],  // Adding AppService for the test (if needed)
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    appController = app.get<AppController>(AppController);  // Make sure to retrieve AppController
   });
 
   describe('root', () => {
