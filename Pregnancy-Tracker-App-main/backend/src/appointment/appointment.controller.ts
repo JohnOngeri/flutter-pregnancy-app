@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, HttpCode } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
@@ -12,6 +12,7 @@ export class AppointmentController {
 
   // Endpoint to create a new appointment
   @Post()
+  @HttpCode(201) // Explicitly setting the status code for clarity
   create(@Body() createAppointmentDto: CreateAppointmentDto) {
     return this.appointmentService.create(createAppointmentDto);
   }
@@ -42,8 +43,8 @@ export class AppointmentController {
 
   // Endpoint to delete an appointment by ID
   @Delete(':id')
+  @HttpCode(204) // Explicitly setting the status code for clarity
   async remove(@Param('id') id: string) {
     await this.appointmentService.remove(id);
   }
 }
-

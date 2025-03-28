@@ -58,3 +58,10 @@ void main() {
     expect(find.byType(AppointmentsPage), findsNothing);
   });
 }
+
+MyApp(
+    {required NoteBloc noteBloc,
+    required AppointmentBloc appointmentBloc,
+    required PostListBloc postBloc,
+    required commentBloc,
+    required profileBloc}) {}
