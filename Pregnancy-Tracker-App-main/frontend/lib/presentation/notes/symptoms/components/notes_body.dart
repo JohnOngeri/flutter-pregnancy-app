@@ -34,7 +34,6 @@ class _NoteBodyState extends State<NoteBody> {
               scale: 5,
             ),
           ),
-          // Plus button and background
           const Body(),
           const PlusButton(),
         ],
@@ -52,21 +51,25 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   late NoteBloc noteBloc;
-  var notes = [];
   final SharedPreferenceService service = SharedPreferenceService();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    noteBloc = BlocProvider.of<NoteBloc>(context);
+  }
 
   @override
   void initState() {
     super.initState();
     print("Initializing BodyState");
-    noteBloc = BlocProvider.of<NoteBloc>(context);
 
     service.getProfileId().then((value) {
-      if (value != null) {
+      if (value != null && mounted) {
         print("Fetched profile ID: $value");
         fetchNotes(value);
       } else {
-        print("Error: Profile ID is null");
+        print("Error: Profile ID is null or widget not mounted");
       }
     }).catchError((error) {
       print("Error fetching profile ID: $error");
@@ -97,25 +100,24 @@ class _BodyState extends State<Body> {
           );
         } else if (state is NoteStateSuccessMultiple) {
           print("Notes fetched successfully: ${state.notes.length} notes");
-          notes = state.notes.reversed.toList();
+
           return ListView.builder(
-            itemCount: notes.length,
+            itemCount: state.notes.length,
             itemBuilder: (context, index) {
-              final note = notes[index];
-              var item = NoteItem(
-                title: note.title,
-                body: note.body,
-                NoteId: note.id,
-              );
+              final note = state.notes.reversed.toList()[index];
               return Padding(
                 padding: const EdgeInsets.only(bottom: 5),
-                child: item,
+                child: NoteItem(
+                  title: note.title,
+                  body: note.body,
+                  NoteId: note.id ?? "",
+                ),
               );
             },
           );
         } else if (state is NoteStateFailure) {
-          return Center(
-            child: Text("Failed to fetch notes:}"),
+          return const Center(
+            child: Text("Failed to fetch notes"),
           );
         } else {
           return const Center(

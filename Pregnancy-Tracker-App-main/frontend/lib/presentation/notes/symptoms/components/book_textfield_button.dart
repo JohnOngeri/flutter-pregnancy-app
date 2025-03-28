@@ -142,24 +142,45 @@ class _BookTextFieldButtonState extends State<BookTextFieldButton> {
                 // increase the size of the button
 
                 onPressed: () {
-                  // Get the Note title and body from the TextField
-                  final NoteTitle = _titleController.text;
-                  final NoteBody = _bodyController.text;
+  // Get the Note title and body from the TextField
+  final noteTitle = _titleController.text.trim();
+  final noteBody = _bodyController.text.trim();
 
-                  NoteForm noteForm = NoteForm(
-                    title: NoteTitle,
-                    body: NoteBody,
-                  );
+  // Validate empty fields
+  if (noteTitle.isEmpty || noteBody.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Title and Body cannot be empty'),
+        backgroundColor: Colors.red,
+      ),
+    );
+    return; // Stop execution if validation fails
+  }
 
-                  print(noteForm.body);
-                  print(noteForm.title);
+  // Create note form object
+  NoteForm noteForm = NoteForm(
+    title: noteTitle,
+    body: noteBody,
+  );
 
-                  noteBloc.add(
-                    NoteEventAdd(noteForm),
-                  );
-                  // Access NoteBloc here and perform necessary operations
-                },
-                icon: const Icon(Icons.send),
+  // Dispatch event to Bloc
+  noteBloc.add(NoteEventAdd(noteForm));
+
+  // Clear input fields after successful submission
+  _titleController.clear();
+  _bodyController.clear();
+
+  // Provide user feedback
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('Note added successfully!'),
+      backgroundColor: Colors.green,
+      duration: Duration(seconds: 1),
+    ),
+  );
+},
+icon: const Icon(Icons.send),
+
               ),
             ),
           ],
