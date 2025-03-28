@@ -1,24 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
+  
+  <!-- Base path for the app (if serving in a subpath) -->
   <base href="$FLUTTER_BASE_HREF">
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <!-- Browser compatibility and description -->
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="description" content="A new Flutter project.">
 
   <!-- iOS meta tags & icons -->
@@ -28,12 +18,15 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" href="favicon.png" type="image/png">
 
   <title>frontend</title>
+
+  <!-- Web app manifest -->
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <!-- Load Flutter app bootstrap script -->
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
