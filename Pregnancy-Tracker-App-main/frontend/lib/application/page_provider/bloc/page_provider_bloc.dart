@@ -17,10 +17,11 @@ class PageProviderBloc extends Bloc<PageProviderEvent, PageProviderState> {
     });
   }
 
-  void _getPage(
-      {required currentIndex,
-      required PageProviderEvent event,
-      required Emitter<PageProviderState> emit}) {
+  void _getPage({
+    required int currentIndex,
+    required PageProviderEvent event,
+    required Emitter<PageProviderState> emit,
+  }) {
     switch (currentIndex) {
       case 0:
         emit(SelectedPage(const LandingPage(), currentIndex));
@@ -29,6 +30,7 @@ class PageProviderBloc extends Bloc<PageProviderEvent, PageProviderState> {
       case 1:
         emit(SelectedPage(const PostsPage(), currentIndex));
         break;
+
       case 2:
         emit(SelectedPage(OthersPage(), currentIndex));
         break;
