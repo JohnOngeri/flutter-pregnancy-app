@@ -8,6 +8,9 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class ProfileService {
+    getAllProfiles() {
+      throw new Error('Method not implemented.');
+    }
 
     constructor(
         @InjectModel(Profile.name) private ProfileModel: Model<IProfile>
