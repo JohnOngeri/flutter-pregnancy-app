@@ -15,32 +15,32 @@ export class CommentsService {
     ){}
 
   async createComment(createCommentDto: CreateCommentDto) {
-    try{
-      const newComment = new this.commentModel(createCommentDto);
-      
+    try {
+      const newComment = await new this.commentModel(createCommentDto).save();
+  
       // update the post
       const reqPost = await this.postService.findOne(createCommentDto.postId);
       if (reqPost != null) {
         var postComments = reqPost.comments;
-        postComments.push(newComment.id.toString());
+        if (newComment.id !== null) {
+          postComments.push(newComment.id.toString());
+        }
         const updatedPost = await this.postService.updatePost(createCommentDto.postId, { comments: postComments });
       }
-
-      
+  
       // update the profile
       const reqProfile = await this.profileService.findOne(createCommentDto.author);
       if (reqProfile != null) {
         var profileComments = reqProfile.comments;
-        profileComments.push(newComment.id.toString());
-        const updatedProfile = await this.profileService.updateProfile(createCommentDto.author, { comments: profileComments});
+        if (newComment.id !== null) {
+          profileComments.push(newComment.id.toString());
+        }
+        const updatedProfile = await this.profileService.updateProfile(createCommentDto.author, { comments: profileComments });
       }
-
-      return await newComment.save();
-
-    } catch(error) { 
-      // return new HttpException(error.message, HttpStatus.BAD_REQUEST);
-      throw new Error(`Couldn't create comment: ${error.message}`)
-
+  
+      return newComment;
+    } catch (error) {
+      throw new Error(`Couldn't create comment: ${error.message}`);
     }
   }
 
