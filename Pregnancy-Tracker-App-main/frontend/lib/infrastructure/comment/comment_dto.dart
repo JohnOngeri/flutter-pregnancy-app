@@ -17,7 +17,7 @@ class CommentDto {
     try {
       print("Parsing CommentDto from JSON: $json");
       return CommentDto(
-        id: json['_id'],
+        id: json['_id'] ?? '',
         body: json['body'],
         postId: json['postId'],
         author: json['author'],
@@ -31,7 +31,7 @@ class CommentDto {
   Map<String, dynamic> toJson() {
     try {
       final jsonData = {
-        'id': id,
+        if (id != null) 'id': id,
         'body': body,
         'postId': postId,
         'author': author,

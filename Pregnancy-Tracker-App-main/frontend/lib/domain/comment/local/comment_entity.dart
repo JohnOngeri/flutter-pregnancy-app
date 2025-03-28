@@ -1,11 +1,11 @@
 class CommentEntity {
-  final String id;
+  final String ? id;
   final String body;
   final String postId;
   final String author;
 
   CommentEntity({
-    required this.id,
+    this.id ,
     required this.body,
     required this.postId,
     required this.author,
@@ -13,7 +13,7 @@ class CommentEntity {
 
   factory CommentEntity.fromJson(Map<String, dynamic> json) {
     return CommentEntity(
-      id: json['id'] as String,
+      id: json['id'] as String?,
       body: json['body'] as String,
       postId: json['postId'] as String,
       author: json['author'] as String,
@@ -22,7 +22,7 @@ class CommentEntity {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': id ?? '',
       'body': body,
       'postId': postId,
       'author': author,
