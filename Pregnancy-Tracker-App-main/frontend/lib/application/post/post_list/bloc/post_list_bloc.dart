@@ -50,7 +50,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
       );
 
       // Refresh the post list
-      
+       add(const PostListEventRefresh());
     });
 
     on<PostListEventUpdatePost> ((event, emit) async {
