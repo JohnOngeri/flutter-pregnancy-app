@@ -1,115 +1,122 @@
-
-
-Welcome to the  repository! This is a mobile app that provides a comprehensive and user-friendly platform for expectant mothers to manage their pregnancy journey. With features such as user registration and login, users can easily create and manage their account, ensuring their privacy and security.
-
-Users can also create and edit their profile, allowing them to share information about themselves, such as their due date and personal preferences.
-
-The app allows users to post and share pregnancy-related content, including photos, questions, and articles. Other users can like and comment on these posts, creating a supportive and engaging community.
-
-The daily tips feature provides helpful information on a range of categories, such as nutrition, exercise, and self-care, ensuring users receive the information they need to make informed decisions about their health.
-
-The notes section allows users to track their symptoms, providing an easy way to monitor their progress and discuss any concerns with their healthcare provider.
-
-The pregnancy calendar provides users with a clear and visual representation of their pregnancy journey, including a baby size simulator to show how their baby is growing and developing.
-
-Finally, the appointment setter and reminder feature ensures users don't miss important appointments, helping them to stay on track and receive the care they need. Overall, your pregnancy tracker app provides a valuable and essential resource for expectant mothers, making their journey easier, more enjoyable, and more informed.
-
-Backend.
-
-
-
-Nest Logo
-
-A progressive Node.js framework for building efficient and scalable server-side applications.
-
-NPM Version Package License NPM Downloads CircleCI Coverage Discord Backers on Open Collective Sponsors on Open Collective  Support us 
-
-Description
-Nest framework TypeScript starter repository.
-
-Installation
-$ npm install
-Running the app
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-Test
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-
-FRONTEND
-
-
 # Pregnancy Tracker App
 
-This is a Flutter application that allows users to track their pregnancy and stay informed about their baby's development.
+## Overview
+Welcome to the Pregnancy Tracker App repository! This mobile application is designed to provide expectant mothers with a comprehensive and user-friendly platform to manage their pregnancy journey. The app offers a wide range of features, from tracking daily symptoms to community engagement, ensuring a supportive and informative experience.
 
-## Getting Started
+## Features
+### User Authentication
+- Secure user registration and login system.
+- Profile management to customize user experience.
 
-To get started with the application, follow these steps:
+### Community Engagement
+- Users can post, share pregnancy-related content, and interact through likes and comments.
+- A supportive and engaging community for expectant mothers.
 
-### Step 1: Install Flutter
+### Informative Features
+- **Daily Tips**: Information on nutrition, exercise, and self-care.
+- **Pregnancy Calendar**: A visual representation of the pregnancy journey.
+- **Baby Size Simulator**: Track the baby’s growth and development.
 
-If you haven't already, install Flutter on your machine by following the instructions on the [Flutter website](https://flutter.dev/docs/get-started/install).
+### Health & Tracking
+- **Notes Section**: Allows users to track their symptoms and discuss concerns with healthcare providers.
+- **Appointment Setter & Reminders**: Ensures users stay on track with their medical visits.
 
-### Step 2: Clone the Repository
+---
 
- Clone the repository to your local machine:
+# Backend
+The backend of the Pregnancy Tracker App is built using **NestJS**, a progressive Node.js framework for efficient and scalable server-side applications.
+
+## Installation
+Ensure you have **Node.js** installed before proceeding.
 
 ```bash
+npm install
+```
+
+## Running the App
+### Development Mode
+```bash
+npm run start
+```
+### Watch Mode
+```bash
+npm run start:dev
+```
+### Production Mode
+```bash
+npm run start:prod
+```
+
+## Testing
+### Unit Tests
+```bash
+npm run test
+```
+### End-to-End (E2E) Tests
+```bash
+npm run test:e2e
+```
+### Test Coverage
+```bash
+npm run test:cov
+```
+
+---
+
+# Frontend
+The frontend of the Pregnancy Tracker App is built using **Flutter**, providing a smooth and interactive user experience.
+
+## Getting Started
+### Step 1: Install Flutter
+Follow the instructions on the [Flutter website](https://flutter.dev/docs/get-started/install) to install Flutter on your machine.
+
+### Step 2: Clone the Repository
+```bash
 git clone https://github.com/your-username/pregnancy-tracker-app.git
-Step 3: Navigate to the Project Directory
-Navigate to the project directory:
+```
 
-bash
-
+### Step 3: Navigate to the Project Directory
+```bash
 cd pregnancy-tracker-app
-Step 4: Install Dependencies
-Install the dependencies:
+```
 
-bash
-
+### Step 4: Install Dependencies
+```bash
 flutter pub get
-Step 5: Set up the Environment Variables
-Set up the environment variables:
+```
 
-bash
-
+### Step 5: Set Up Environment Variables
+```bash
 cp .env.example .env
-Step 6: Start the Application
-Start the application:
+```
 
-bash
-
+### Step 6: Start the Application
+```bash
 flutter run
-Step 7: Open the Application in Your Emulator or Simulator
-Open the application in your emulator or simulator:
+```
 
-bash
-
+### Step 7: Open the Application in an Emulator or Simulator
+```bash
 http://localhost:5000
-Step 8: Set up the Database
-Set up the database by running the following command:
+```
 
-bash
-
+### Step 8: Set Up the Database
+```bash
 flutter pub run sqflite_common_ffi:sqflite_ffi_init
-Step 9: Run the Application
-Run the application:
+```
 
-bash
-
+### Step 9: Run the Application
+```bash
 flutter run
+```
 
+## Contribution
+Contributions are welcome! Please open an issue or submit a pull request if you’d like to contribute.
+
+## License
+This project is licensed under the MIT License.
+
+---
+
+Feel free to modify or enhance this README as needed!
 
