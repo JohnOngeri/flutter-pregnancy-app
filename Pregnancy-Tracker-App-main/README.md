@@ -110,11 +110,8 @@ flutter pub run sqflite_common_ffi:sqflite_ffi_init
 flutter run
 ```
 
-## Contribution
-Contributions are welcome! Please open an issue or submit a pull request if you’d like to contribute.
 
-## License
-This project is licensed under the MIT License.
+
 
 ---
 
