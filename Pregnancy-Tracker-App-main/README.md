@@ -23,11 +23,10 @@ Welcome to the Pregnancy Tracker App repository! This mobile application is desi
 
 ---
 
-# Backend
-The backend of the Pregnancy Tracker App is built using **NestJS**, a progressive Node.js framework for efficient and scalable server-side applications.
+
 
 ## Installation
-Ensure you have **Node.js** installed before proceeding.
+Ensure you have **firebase** installed before proceeding.
 
 ```bash
 npm install
